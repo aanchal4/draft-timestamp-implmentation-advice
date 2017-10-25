@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc strict="yes"?>
+<?rfc toc="no"?>
+<?rfc tocdepth="3"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+
+<rfc category="std" docName="draft-aanchal-timestamp-implementation-advice" ipr="trust200902">
+  <front>
+    <title>How to implement Time?</title>
+
+    <author fullname="Aanchal Malhotra" initials="A." surname="Malhotra">
+        <organization>Boston University</organization>
+        <address>
+            <postal>
+                <street>111 Cummington Mall</street>
+                <city>Boston</city>
+                <region></region>
+                <code>02215</code>
+                <country>USA</country>
+            </postal>
+            <email>aanchal4@bu.edu</email>
+        </address>
+    </author>
+    
+    <author fullname="Martin Hoffman " initials="M." surname="Hoffman">
+        <organization>NLNet Labs</organization>
+        <address>
+            <postal>
+                <street>Science Park 400</street>
+                <city>Amsterdam</city>
+                <region></region>
+                <code>1098 XH</code>
+                <country>Netherlands</country>
+            </postal>
+            <email>martin@nlnetlabs.nl</email>
+        </address>
+    </author>
+    
+    <author fullname="Willem Toorop" initials="W." surname="Toorop">
+        <organization>NLNet Labs</organization>
+        <address>
+            <postal>
+                <street>Science Park 400</street>
+                <city>Amsterdam</city>
+                <region></region>
+                <code>1098 XH</code>
+                <country>Netherlands</country>
+            </postal>
+            <email>willem@nlnetlabs.nl</email>
+        </address>
+    </author>
+
+    <date year="2017" month="October" day="19"/>
+
+    <area>General</area>
+
+    <workgroup>Internet Engineering Task Force</workgroup>
+
+    <keyword>timestamps</keyword>
+
+    <keyword>timespans</keyword>
+
+    <abstract>
+        <t>This document describes limitations of different types of time values available on digital systems
+            and provide guidance on choice of these time values for applications that implement time in
+            some form to provide the basic functionality and/or security.</t>
+        </abstract>
+  </front>
+
+  <middle>
+      <section title="Introduction">
+      <t>The basic functionality and security guarantees claimed by many applications running on
+          digital systems locally or in the Internet hinges on some notion of time. These
+          applications have to choose one of the many types of time values available on the system, each of which
+          has with its own specific properties. However, currently these applications seem to be oblivious
+          to the implications of using one or the other time value for implementation. This behaviour can be attributed to the
+          lack of clear understanding of the distinct properties and availability of these time values.
+          In this document we describe various available time values on modern digitial systems, discuss their properties,
+          and provide guidance to help implementors make an informed choice.
+          </t>
+   
+  <section title="Requirements Language">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+          "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+          document are to be interpreted as described in <xref
+              target="RFC2119">RFC 2119</xref>.</t>
+  </section>
+      </section>
+
+
+      <section title="Defining the Different Types of Clocks">
+          <t> There is no standardized terminology and definitions of times for different types of clocks
+              avaialble on modern operating systems (OS). For the purposes of this document, we define them here.
+              These are by no means standard names or definitions. Their only purpose is consistency and
+              clarity of the document. Different operating systems use these definitions but name them differently.
+              </t>
+          
+          <t>Wall Time : Represents time that is measured directly from the source
+            (atomic clocks, Geo Positioning Systems, etc.) as the amount of time elapsed since an epoch
+            (International Atomic Time, Universal Coordinated Time, etc).
+              This time can not be set and is not subject to changes by network timing protocols (Network Time Protocol, etc).
+              Ideally every one strives for this ideal time but no one (or not all) has direct access
+              to this time. Instead everyone has access to some perturbed version of this Wall time
+              as described below.</t>
+              <t>We define three different kinds of time values (clocks) each with its own imperfections:</t>
+              <t><list style="numbers">
+                  <t>Raw Time: Clock that represents monotonic time (linearly increasing) since some
+                      unspecified starting point. This clock measures the frequency of local oscillator and is not
+                      subject to adjustments by timing protocols (NTP, etc) or from setting the time.
+                      However, this time is different from the Wall time in two aspects.</t>
+                      <t><list style = "numbers">
+                      <t> It only represents the difference in time between a starting and ending point.</t>
+                      <t> It is subject to errors introduced by frequency drift of the oscillator. </t>
+                      </list></t>
+                  
+                  <t>Adjusted Raw Time: Clock that represents monotonic time (linearly increasing) since
+                      some unspecified starting point. This time is subject to adjustments by timing
+                      protocols but it does not reflect discontinuities (large jumps backwards or forwards)
+                      from setting the time or from adjustments by timing protocols. Rather, its rate of
+                      advance is just adjusted to correct for the error introduced by the frequency drift of oscillator
+                      with respect to real time (e.g. by NTP when there is a difference between the local
+                      oscillator and the upstream servers.) However, this time is different from the Wall
+                      time in two aspects.</t>
+                      <t><list style="numbers">
+                      <t>It only represents the difference in time between a
+                      starting and ending point. </t>
+                          <t> It is subject to changes by timing protocols.</t>
+                          </list></t>
+                  
+                 <t> Monotonic Time: Either raw time or adjusted raw time depending on the system.
+                  </t>
+                  
+                  <t>Real Time : Clock that represents the amount of time elapsed since an epoch.
+                      This clock represents what the system thinks the time is. Unlike adjusted raw time,
+                      real time can make large jumps both backwards and forward from setting the time
+                      or from adjustments by timing protocols. Real time, in some sense, could potentially
+                      represent the Wall clock time. In fact, the accuracy of this real time depends on the
+                      quality of timing protocols because the only difference between real time and
+                      Wall time is due to jumps/changes introduced by the timing protocols.</t>
+                  </list> </t>
+          
+          
+      </section>
+
+    <section title="Time stamps vs Time spans">
+        <t>In this section we define two different forms in which time manifests itself in various
+            applications as follows:</t>
+        <t><list style="numbers">
+            <t>Time stamps: Represent absolute time value at some point from a reference point
+                (seconds elapsed since an epoch). For the correctness of the time stamps i.e.
+                for this time value to be in sync with the systems in the rest of the world, the assumption
+                is that the network timing protocols that update real time on the systmes are correct and secure.
+                For context, take the example of digital certificates or DNSSEC signature resource
+                records. These objects have validity periods associated with them in the form
+                of inception and expiration time stamps. Before accepting any of these objects,
+                the user has to compare these time stamps with the real time.
+                Time stamps represent wall time but since a machine never can achieve wall time,
+                it has to use real time when working with time stamps.</t>
+            
+            <t>Time spans: Represent difference in time values between a starting and ending point.
+                For the correctness of the time spans i.e. for these time spans to have same values
+                for all the systems, the assumption is that the systems count time at the same rate
+                (assuming no or same frequency drift).</t>
+               <t> For context, take the example of Time To Live(TTL) values that limit the lifetime of
+                a certain record in the local cache. Or scheduling an event such as retransmission or timeouts
+                after certain time interval. Since these time spans are usually short, the precision in time
+                becomes less of a priority.
+                </t>
+            </list></t>
+    </section>
+    <section title = "Current Implementation and Why is it bad?">
+        <t>Currently, most softwares take a common approach towards time stamps and time spans. </t>
+            <t> In a typical implemntations, time spans are registered as some event that will happen at some
+                point in the future. The value of that point in the future is then represented as real time timestamp.
+            </t>
+            <t>Using real time is bad because of the following reasons.
+                </t>
+            <t><list style="numbers">
+                <t>It can be set or overwritten manually,</t>
+            <t>It is subject to adjustments by timing protocols which on one hand is important to
+                make sure that this time is in sync with the rest of the world but on the other
+                hand makes it dependent on the correctness and security of timing protocols.</t>
+            </list></t>
+           <t> Recent attacks <xref target="SECNTP"></xref>,<xref target="SECNTP1"></xref> show how timing protocols
+               like NTP can be leveraged to shift real time on systems.</t>
+           <t>Time stamps are always based on wall time, so the best one can do is to use real time
+               while dealing with them. However, this is not the limitation for the time spans. So we
+           can alternative ways to implement time spans which MAY prove to be more secure and robust.</t>
+           
+            
+        <t>An obvious question to ask is that why do we need inception and expiration time stamps in the first place
+            to define the validity period of cryptographic objects? Why can not we just use time spans like TTL values instead?
+            The reason is straightforward. TTL values must be adjusted to account for the time elapsed between the times
+            that the object was generated and the recipient receives the object. For clarity, let us look at the example
+            of a caching DNS resolver. Suppose it has a cached unsigned DNS A record for www.google.com with initial TTL value of 300s.
+            Now when an entity X queries for www.google.com 20 sec later, the caching DNS resolver would reduce the TTL
+            value on the original cached response by 20 seconds before sending the response to X. However, this is not
+            possible for signed DNSSEC records as this would render these responses invalid in case they are messed with.</t>
+        
+            <t>  Since we have no choice but to use real time for time stamps, for the rest of the document we only discuss the case of time spans.  </t>
+
+        </section>
+    <section title = "Alternative Approaches">
+        <t> For time spans, where we only need the rate of passage of time to be same/close enough to the rest of the world,
+            one SHOULD not use the real time for the reasons mentioned above.
+            The other two timestamps available are raw time and adjusted raw time. The important aspect of these monotonic time
+            sources is not their current value, but the guarantee that the time source is strictly linearly increasing, and
+            thus useful for calculating the difference in time between two samplings. But each comes with its own caveats.</t>
+        <t><list>
+            <t> Raw Time is not subject to any adjustments by timing protocols i.e. it is not adjusted for the error
+                introduced by frequency drift of the local oscillator. This could have two repurcussions. First, this
+                makes correctness of raw time independent of the errors or security vulnerabilities of the timing protocols. Second, its
+                correctness depends on the frequency drift which further depends on various factors such as quality of quartz
+                or work load or ambient temperature on the system and may vary.</t>
+           <t> Adjusted Raw Time, on the other hand, is subject to adjustments by timing protocols and so is compensated for
+               the errors introduced due to frequency drift of the local clock. However, this time could be bad as it is
+               vulnerable to accuracy and security vulnerabilities of the underlying timing protocol.</t>
+           </list></t>
+            
+            <t>The choice of time value to be used is application-specific. For instance in applications that can tolerate
+                the clock-drift upto x, xan use MRT. However, if that is an issue then one has no choice but to fallback to MT.
+            Also, one important point of consideration is the leap second.</t>
+
+
+        </section>
+    <section title = "Security Considerations">
+        <t>ABC</t>
+        </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      &RFC2119;
+
+
+    </references>
+
+    <references title="Informative References">
+      
+
+      <reference anchor="SECNTP" target="http://eprint.iacr.org/2016/1006">
+        <front>
+          <title>The Security of NTP's Datagram Protocol</title>
+
+          <author initials="A." surname="Malhotra" fullname="A. Malhotra">
+            <organization/>
+          </author>
+          <author initials="M. V." surname="Gundy" fullname="M. V. Gundy">
+            <organization/>
+          </author>
+          <author initials="M." surname="Varia" fullname="M. Varia">
+            <organization/>
+          </author>
+          <author initials="H." surname="Kennedy" fullname="H. Kennedy">
+            <organization/>
+          </author>
+          <author initials="J." surname="Gardner" fullname="J. Gardner">
+            <organization/>
+          </author>
+          <author initials="S." surname="Goldberg" fullname="S. Goldberg">
+            <organization/>
+          </author>
+
+          <date year="2016"/>
+          </front>
+          </reference>
+        
+      <reference anchor="SECNTP1" target="https://eprint.iacr.org/2015/1020">
+        <front>
+            <title>Attacking the Network Time Protocol</title>
+            
+            <author initials="A." surname="Malhotra" fullname="A. Malhotra">
+                <organization/>
+            </author>
+            <author initials="I." surname="Cohen" fullname="I. Cohen">
+                <organization/>
+            </author>
+            <author initials="E." surname="Brakke" fullname="E. Brakke">
+                <organization/>
+            </author>
+            <author initials="S." surname="Goldberg" fullname="S. Goldberg">
+                <organization/>
+            </author>
+            
+            <date year="2015"/>
+        </front>
+      </reference>
+    </references>
+  </back>
+</rfc>

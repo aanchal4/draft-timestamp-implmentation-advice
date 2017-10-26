@@ -29,8 +29,8 @@
         </address>
     </author>
     
-    <author fullname="Martin Hoffman " initials="M." surname="Hoffman">
-        <organization>NLNet Labs</organization>
+    <author fullname="Martin Hoffmann" initials="M." surname="Hoffmann">
+        <organization>Open Netlabs</organization>
         <address>
             <postal>
                 <street>Science Park 400</street>
@@ -39,12 +39,12 @@
                 <code>1098 XH</code>
                 <country>Netherlands</country>
             </postal>
-            <email>martin@nlnetlabs.nl</email>
+            <email>martin@opennetlabs</email>
         </address>
     </author>
     
     <author fullname="Willem Toorop" initials="W." surname="Toorop">
-        <organization>NLNet Labs</organization>
+        <organization>NLnet Labs</organization>
         <address>
             <postal>
                 <street>Science Park 400</street>
@@ -94,7 +94,49 @@
   </section>
       </section>
 
+      <section title="Keeping Time: Four Different Clocks">
+          <t> Because time is relative to an observer, there cannot be a
+              universally agreed upon time. At best we can achieve an
+              approximation by updating our own observed time with a
+              common reference time shared with other observers.</t>
 
+          <t> As this reference time is what we naively assume clocks on a wall are
+              showing, we shall call it the "wall time." For most
+              applications, it is based on the Universal Coordinated Time
+              (UTC), an international standard time determined by averaging
+              the output of several high-precision time-keeping devices.
+              However, as UTC is following Earth’s solar time, it
+              occasionally needs to be adjusted through leap seconds.</t>
+              
+          <t> An individual computer system’s preception of time differs from
+              that of this idealized wall time. Staying close to it requires
+              some effort that comes with its own set up drawbacks. Systems
+              therefore provide access to different types of clocks with
+              different properties. Unfortunately, there is no standard
+              terminology and definitions for these types. For the purpose of
+              this document, we therefore define three different kinds of clocks
+              that a system may or may not provide.</t>
+
+          <section title="Raw Time">
+              <t> At its most fundamental, a system has its own, unmodified
+                  perception of time. This time is typically measured by counting
+                  cycles of an oscillator. Its quality therefore relies on the
+                  stability of this oscillator.</t>
+
+              <t> As it is a purely subjective time, no general meaning can be
+                  attached to its origin.</t>
+
+              <!-- drift: difference to wall time’s passing introduced to imperfection of time source -->
+              <!-- property: monotonic. -->
+
+          </section>
+          <section title="Adjusted Raw Time">
+          </section>
+
+              
+
+      </section>
+      <!--
       <section title="Defining the Different Types of Clocks">
           <t> There is no standardized terminology and definitions of times for different types of clocks
               avaialble on modern operating systems (OS). For the purposes of this document, we define them here.
@@ -148,8 +190,9 @@
           
           
       </section>
+      -->
 
-    <section title="Time stamps vs Time spans">
+    <section title="Expressing Time: Time stamps vs Time spans">
         <t>In this section we define two different forms in which time manifests itself in various
             applications as follows:</t>
         <t><list style="numbers">

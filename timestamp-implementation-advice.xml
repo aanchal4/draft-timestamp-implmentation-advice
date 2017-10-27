@@ -108,12 +108,6 @@
                   stability of this oscillator.</t>
 
               <t> As it is a purely subjective time, no general meaning can be
-                  attached to its origin.</t>
-
-              <!-- drift: difference to wall time's passing introduced to imperfection of time source -->
-              <!-- property: monotonic. -->
-
-              <t> As it is a purely subjective time, no general meaning can be
                   attached to any specific value. Only the amount of time passed
                   can be determined by comparing two values.</t>
           </section>

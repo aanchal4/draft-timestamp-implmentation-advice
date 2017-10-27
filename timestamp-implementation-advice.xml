@@ -115,7 +115,7 @@
 
               <t> As it is a purely subjective time, no general meaning can be
                   attached to any specific value. Only the amount of time passed
-                  can be determined by comparing two values.
+                  can be determined by comparing two values.</t>
           </section>
           <section title="Adjusted Raw Time">
               <t> Even if highly accurate oscillators are used, raw time passes at a
@@ -124,7 +124,7 @@
                   also on environmental factors such as temperature.</t>
               <t> When this drift is componsated by comparing the passage of raw time
                   to some external time source that is considered to be closer to
-                  wall time, the result is "adjusted raw time." This adjustment doesn’t
+                  wall time, the result is "adjusted raw time." This adjustment doesn't
                   happen sporatically but rather, time is slowed or sped up slightly
                   until it approaches the reference time again. As a result, adjusted
                   raw time is still monotonic. Like raw time, adjusted raw time is
@@ -132,7 +132,7 @@
               <t> The most frequently used method of acquiring an external time source
                   is through network timing protocols such as NTP. [RFC????]. As a
                   result, adjusted raw time is susceptible to vulnerabilites of these
-                  protocols which may be used to maliciously manipulate this time.
+                  protocols which may be used to maliciously manipulate this time.</t>
           </section>
           <section title="Real Time">
               <t> With adjusted raw time, a system already has access to a time that
@@ -141,13 +141,13 @@
                   point of wall time, time values themselves gather meaning. The
                   result is "real time."</t>
               <t> While it is often assumed that real time is set to match wall time,
-                  this doesn’t need to be the case. An system’s operator is free to
+                  this doesn't need to be the case. An system's operator is free to
                   change the value of real time at any time, likewise, system services
                   such as a local NTP client may decide to do so.</t>
               <t> As a consequence, real time is not monotonic. It may spontaneously
                   jump forward or, worse, in may decrease.</t>
           </section>
-          <!-- Martin’s Note: I suggest we introduce the fact that some systems don’t
+          <!-- Martin's Note: I suggest we introduce the fact that some systems don't
                explicitly declare raw time v. adjusted raw time only in the last section
                where we talk about how to get those time values on the various systems.  -->
       </section>

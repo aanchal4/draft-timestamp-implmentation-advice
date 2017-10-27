@@ -89,9 +89,11 @@
       </section>
     </section>
 
-    <section title="Keeping Time: Four Different Clocks">
-      <t>Because time is relative to an observer, there cannot be a
-        universally agreed upon time. At best we can achieve an approximation by updating our own observed time with a common reference time shared with other observers.</t>
+      <section title="Keeping Time: Different Clocks">
+          <t> Because time is relative to an observer, there cannot be a
+              universally agreed upon time. At best we can achieve an
+              approximation by updating our own observed time with a
+              common reference time shared with other observers.</t>
 
       <t>As this reference time is what we naively assume clocks on a wall are
         showing, we shall call it the "wall time." For most applications, it is based on the Universal Coordinated Time (UTC), an international standard time determined by averaging the output of several high-precision time-keeping devices. However, as UTC is following Earth's solar time, it occasionally needs to be adjusted through leap seconds.</t>
@@ -100,9 +102,9 @@
         of this idealized wall time. Staying close to it requires some effort that comes with its own set up drawbacks. Systems therefore provide access to different types of clocks with different properties. Unfortunately, there is no standard terminology and definitions for these types. For the purpose of this document, we therefore define three different kinds of clocks that a system may or may not provide.</t>
 
           <section title="Raw Time">
-              <t> At its most fundamental, a system has its own, unmodified
-                  perception of time. This time is typically measured by counting
-                  cycles of an oscillator. Its quality therefore relies on the
+              <t> At its most fundamental, a system has its own perception of
+                  time; its unmodified, "raw time." This time is typically measured
+                  by counting cycles of an oscillator. Its quality therefore relies on the
                   stability of this oscillator.</t>
 
               <t> As it is a purely subjective time, no general meaning can be
@@ -111,14 +113,45 @@
               <!-- drift: difference to wall time's passing introduced to imperfection of time source -->
               <!-- property: monotonic. -->
 
+              <t> As it is a purely subjective time, no general meaning can be
+                  attached to any specific value. Only the amount of time passed
+                  can be determined by comparing two values.
           </section>
           <section title="Adjusted Raw Time">
+              <t> Even if highly accurate oscillators are used, raw time passes at a
+                  slightly different rate then wall time. This difference is called
+                  drift. It depends not only on the quality of the time source but
+                  also on environmental factors such as temperature.</t>
+              <t> When this drift is componsated by comparing the passage of raw time
+                  to some external time source that is considered to be closer to
+                  wall time, the result is "adjusted raw time." This adjustment doesn’t
+                  happen sporatically but rather, time is slowed or sped up slightly
+                  until it approaches the reference time again. As a result, adjusted
+                  raw time is still monotonic. Like raw time, adjusted raw time is
+                  subjective with no specific meaning attached to any value.</t>
+              <t> The most frequently used method of acquiring an external time source
+                  is through network timing protocols such as NTP. [RFC????]. As a
+                  result, adjusted raw time is susceptible to vulnerabilites of these
+                  protocols which may be used to maliciously manipulate this time.
           </section>
-
-              
-
+          <section title="Real Time">
+              <t> With adjusted raw time, a system already has access to a time that
+                  passes at a rate very similar to wall time. By adjusting the time
+                  value so that it represents the time passed since a well-defined
+                  point of wall time, time values themselves gather meaning. The
+                  result is "real time."</t>
+              <t> While it is often assumed that real time is set to match wall time,
+                  this doesn’t need to be the case. An system’s operator is free to
+                  change the value of real time at any time, likewise, system services
+                  such as a local NTP client may decide to do so.</t>
+              <t> As a consequence, real time is not monotonic. It may spontaneously
+                  jump forward or, worse, in may decrease.</t>
+          </section>
+          <!-- Martin’s Note: I suggest we introduce the fact that some systems don’t
+               explicitly declare raw time v. adjusted raw time only in the last section
+               where we talk about how to get those time values on the various systems.  -->
       </section>
-      <!--
+      <!-- XXX Leaving this here to double check that all points are mentioned in the new text ...
       <section title="Defining the Different Types of Clocks">
           <t> There is no standardized terminology and definitions of times for different types of clocks
               avaialble on modern operating systems (OS). For the purposes of this document, we define them here.

@@ -234,13 +234,13 @@
 	   Conversion of a time span into those time stamp markers is regularly based on real time.
 	</t>
 	<t>Note that the start of a time span will be the current (real) time in case of a TTL.
-	   So, in case of an element that needs to be cached for a certain time, the start time stamp is irrelevant and it is registered together with only the (real) expiration time.</t>
-	<t>Programmers might have had different reason to base those markings on real time, for example:<list style="numbers">
+	   So, in case something needs to be cached for a certain time, the start time stamp is irrelevant and it is registered together with only the (real) expiration time.</t>
+	<t>Programmers might have had different reasons to base those markings on real time, for example:<list style="numbers">
 	  <t>A point in time is intuitively thought of as a wall clock time stamp.
 	  Time stamps from outside the software, which the software has to manage are already in wall clock time.
-	  The POSIX function to get the current (real) time which is regularly used for this, is gettimeofday(), which comes accross as providing wall clock time (or at least a value closest to it).
+	  The POSIX function to get the current (real) time which is regularly used for this, is gettimeofday(), which comes accross as something providing near wall clock time and which can be used for this purpose.
 	  </t>
-	  <t>By taking a common approach time stamps and time spans can be registered using the same system.
+	  <t>Managing time stamps and time span similarly, prevents code complexity.
 	  <vspace blankLines="1" />
 	  For example, many software is organized around I/O event notification mechanisms like the POSIX select() and poll() system C API calls.
 	  These functions wait for a given time span for file descriptors to become ready to perform I/O.
@@ -263,20 +263,20 @@
            <t> Recent attacks <xref target="SECNTP"></xref>,<xref target="SECNTP1"></xref> show how timing protocols
                like NTP can be leveraged to shift real time on systems.</t>
            <t>Time stamps are always based on wall time, so the best one can do is to use real time
-               while dealing with them. However, this is not the limitation for the time spans. So we
-           can have alternative ways to implement time spans which MAY prove to be more secure and robust.</t>
+               while dealing with them. However, this limitation does not hold for the time spans.
+	       Managin time spans may be implemented in alternative ways which may prove to be more secure and robust.</t>
            
         <t><list>
-        <t>An obvious question to ask is that why do we need inception and expiration time stamps in the first place to define the validity period of cryptographic objects?
+        <t>An obvious question to ask is: Why do we need inception and expiration time stamps in the first place to define the validity period of cryptographic objects?
 	   Why can not we just use time spans like TTL values instead?
            The reason is straightforward.
 	   <vspace blankLines="1" />
 	   The authority determining and setting the validity period on the object can be different from the operator delivering the object.
-	   For example the TTL value on DNS resource records indicate caching DNS resolvers how long to keep those resource records into cache.
+	   For example the TTL value on DNS resource records, indicate caching DNS resolvers how long to cache those records.
 	   These are an operational matter and are thus left to the operators of the DNS zone.
 	   <vspace blankLines="1" />
-	   The content of the resource records are however determened by the signer of the records.
-	   When this is not the operator, it has no way to determine when the records will be queried for and thus as to rely on wall clock based time stamps to limit the validity.
+	   The content of the resource records are however determined by the signer of the records.
+	   When she is not the zone operator too, she has no way to determine when the records will be queried for, and thus has to depend on cryptographically signed wall clock based time stamps to limit the validity.
 	   <vspace blankLines="1" />
 	   Note however that DNSSEC signatures do contain the original TTL of a resource record set, restricting the maximum TTL value with which the operator may deliver the resource records.  </t>
 	</list></t>

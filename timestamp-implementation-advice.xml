@@ -305,12 +305,6 @@
   </middle>
 
   <back>
-    <references title="Normative References">
-      &RFC2119;
-
-
-    </references>
-
     <references title="Informative References">
       &RFC5280;
       &RFC5905;

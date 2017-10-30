@@ -99,7 +99,7 @@
               needs to be adjusted through leap seconds.</t>
           <t> An individual computer system's preception of time differs from
               this idealized wall time. Staying close to it requires some
-              effort that comes with its own set up drawbacks. Systems
+              effort that comes with its own set of drawbacks. Systems
               therefore provide access to different types of clocks with
               different properties. Unfortunately, there is no standard
               terminology and definitions for these types. For the purpose of
@@ -197,7 +197,7 @@
                 times is likely larger than that introduced by clock drift.</t>
         </section>
     </section>
-    <section anchor="CURIMP" title = "Current Implementation and Why Is It Bad?"><!-- Martin: Alternative Title "Current Implementations and Their Flaws" -->
+    <section anchor="CURIMP" title = "Current Implementations and Their Flaws">
         <t>Currently, some software takes a common approach towards time stamps and time spans.
 	   Time stamps are registered with their wall time value, and time spans are registered with two time stamp values marking the start and the end of the span.
 	   Conversion of a time span into those time stamp markers is regularly based on real time.
@@ -213,7 +213,7 @@
 	  <vspace blankLines="1" />
 	  For example, many software is organized around I/O event notification mechanisms like the POSIX select() and poll() system C API functions.
 	  These functions wait for a given time span for file descriptors to become ready to perform I/O.
-	  The given time span is determined by substracting the the current real time value from smallest registered time stamp.
+	  The given time span is determined by substracting the current real time value from smallest registered time stamp.
 	  When file descriptors are ready, the non-blocking I/O is performed, otherwise the given time span has passed and the action associated with the smallest registered time stamp needs to be performed.
 	  <vspace blankLines="1" />
 	  For this programming pattern, a sorted list of time stamps has to be maintained by the software.
@@ -245,7 +245,7 @@
 	   These are an operational matter and are thus left to the operators of the DNS zone.
 	   <vspace blankLines="1" />
 	   The content of the resource records are however determined by the signer of the records.
-	   When she is not the zone operator, too, she has no way to determine when the records will be queried for, and thus has to depend on cryptographically signed wall clock based time stamps to limit the validity.
+	   When she is not also the zone operator, she has no way to determine when the records will be queried for, and thus has to depend on cryptographically signed wall clock based time stamps to limit the validity.
 	   <vspace blankLines="1" />
 	   Note however that DNSSEC signatures do contain the original TTL of a resource record set, restricting the maximum TTL value with which the operator may deliver the resource records.  </t>
 	</list></t>
@@ -274,8 +274,8 @@
                 <xref target="CLOCKDRIFT">clock drift</xref>, implementers can use raw time. However, if that is an issue then one has no choice but to fall back to adjusted raw time.</t>
 	<t>POSIX defines a system C API function which may provide raw time: clock_gettime(), when used with a clock_id of CLOCK_MONOTONIC (when supported by the system).
            POSIX does not make a distinction between raw time and adjusted raw time in the definition of this function.
-	   Beware, however, that with some systems, such as Linux, CLOCK_MONOTONIC deliveres adjusted raw time and that CLOCK_MONOTONIC_RAW needs to be used as clock_id to get unadjusted raw time.</t>
-    <!-- Windows? Or at least a mention that non-POSIX systems may provide different APIs? -->
+	   Beware that with some systems, CLOCK_MONOTONIC deliveres adjusted raw time and that CLOCK_MONOTONIC_RAW needs to be used as clock_id to get unadjusted raw time.
+	   Non-POSIX systems may provide different APIs</t>
    
     <t>Software employing the pattern organized around I/O event notification mechanisms, as described in section <xref target="CURIMP" />, should maintain two sorted lists of two different types of time stamps:<list style="numbers">
 	<t>One to register events based on time stamps expressed in wall clock time</t>

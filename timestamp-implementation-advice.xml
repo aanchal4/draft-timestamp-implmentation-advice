@@ -219,8 +219,9 @@
             <t>Time spans: Represent difference in time values between a starting and ending point.
                 For the correctness of the time spans i.e. for these time spans to have same values
                 for all the systems, the assumption is that the systems count time at the same rate
-                (assuming no or same frequency drift).</t>
-               <t> For context, take the example of Time To Live(TTL) values that limit the lifetime of
+                (assuming no or same frequency drift).
+            <vspace blankLines="1" />
+                For context, take the example of Time To Live(TTL) values that limit the lifetime of
                 a certain record in a cache. Or scheduling an event such as retransmission or timeouts
                 after certain time interval. Since these time spans are usually short, the precision in time
                 becomes less of a priority.

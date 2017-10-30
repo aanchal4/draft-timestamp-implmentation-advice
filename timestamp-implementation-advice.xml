@@ -149,7 +149,7 @@
                   absolute time values that can be compared to wall time values.</t>
               <t> Only adjusted raw time and real time are adjusted so that time
                   passes at approximately the same rate as wall time. Raw time will
-                  over time drift away due to inevitable imperfection of the clock.
+                  over time drift away due to inevitable imperfection of the clock.</t>
           </section>
       </section>
 

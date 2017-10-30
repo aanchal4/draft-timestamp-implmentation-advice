@@ -148,7 +148,7 @@
       <!-- XXX Leaving this here to double check that all points are mentioned in the new text ...
       <section title="Defining the Different Types of Clocks">
           <t> There is no standardized terminology and definitions of times for different types of clocks
-              avaialble on modern operating systems (OS). For the purposes of this document, we define them here.
+              available on modern operating systems (OS). For the purposes of this document, we define them here.
               These are by no means standard names or definitions. Their only purpose is consistency and
               clarity of the document. Different operating systems use these definitions but name them differently.
               </t>
@@ -208,7 +208,7 @@
             <t>Time stamps: Represent absolute time value at some point from a reference point
                 (seconds elapsed since an epoch). For the correctness of the time stamps i.e.
                 for this time value to be in sync with the systems in the rest of the world, the assumption
-                is that the network timing protocols that update real time on the systmes are correct and secure.
+                is that the network timing protocols that update real time on the systems are correct and secure.
                 For context, take the example of digital certificates or DNSSEC signature resource
                 records. These objects have validity periods associated with them in the form
                 of inception and expiration time stamps. Before accepting any of these objects,
@@ -221,7 +221,7 @@
                 for all the systems, the assumption is that the systems count time at the same rate
                 (assuming no or same frequency drift).</t>
                <t> For context, take the example of Time To Live(TTL) values that limit the lifetime of
-                a certain record in the local cache. Or scheduling an event such as retransmission or timeouts
+                a certain record in a cache. Or scheduling an event such as retransmission or timeouts
                 after certain time interval. Since these time spans are usually short, the precision in time
                 becomes less of a priority.
                 </t>

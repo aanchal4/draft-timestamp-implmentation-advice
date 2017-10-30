@@ -83,14 +83,7 @@
         applications seem to be oblivious to the implications of choosing one or the other time value for implementation. This behaviour can be attributed to: a) the lack of clear understanding of the distinct properties of these time values, b) trade-offs of using one or the other for an application, and c) availability and compatibilty of these time values on different operating systems.</t>
 
         <t>In this document we describe the properties of various available time values on modern operating systems, discuss the trade-offs of using one over the other, and provide guidance to help implementors make an informed choice with some real-life examples.</t>
-   
-      <section title="Requirements Language">
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-          "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-          document are to be interpreted as described in <xref
-              target="RFC2119">RFC 2119</xref>.</t>
-      </section>
-    </section>
+     </section>
 
       <section title="Keeping Time: Different Clocks">
           <t> Because time is relative to an observer, there cannot be a
@@ -262,7 +255,7 @@
         </section>
     <section anchor="ALTIMP" title = "Alternative Approaches">
         <t>For time spans, where we only need the rate of passage of time to be close enough to the rest of the world,
-            one SHOULD not use the real time to establish the start and end time for the reasons mentioned above.
+            one should not use the real time to establish the start and end time for the reasons mentioned above.
             The other two types of time are raw time and adjusted raw time. The important aspect of these monotonic time
             sources is not their current value but the guarantee that the time source is strictly linearly increasing and
             thus useful for calculating the difference in time between two samplings. But each comes with its own caveats.</t>

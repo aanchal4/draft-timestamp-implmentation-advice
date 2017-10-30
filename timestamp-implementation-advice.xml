@@ -14,9 +14,9 @@
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 
-<rfc category="std" docName="draft-aanchal-timestamp-implementation-advice" ipr="trust200902">
+<rfc category="std" docName="draft-aanchal-time-implementation-guidance-00" ipr="trust200902">
   <front>
-    <title>How to Implement Time?</title>
+    <title>On Implementing Time</title>
 
     <author fullname="Aanchal Malhotra" initials="A." surname="Malhotra">
         <organization>Boston University</organization>

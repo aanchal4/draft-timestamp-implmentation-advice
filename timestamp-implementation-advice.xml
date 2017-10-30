@@ -39,7 +39,7 @@
                 <code>1098 XH</code>
                 <country>Netherlands</country>
             </postal>
-            <email>martin@opennetlabs</email>
+            <email>martin@opennetlabs.com</email>
         </address>
     </author>
     
@@ -57,7 +57,7 @@
         </address>
     </author>
 
-    <date year="2017" month="October" day="19"/>
+    <date year="2017" month="October" day="30"/>
 
     <area>General</area>
 
@@ -228,7 +228,7 @@
                 </t>
             </list></t>
     </section>
-    <section title = "Current Implementation and Why is it bad?">
+    <section anchor="CURIMP" title = "Current Implementation and Why is it bad?">
         <t>Currently, some softwares takes a common approach towards time stamps and time spans.
 	   Time stamps are registered with their wall time value, and time spans are registered with two time stamp values marking the start and the end of the span.
 	   Conversion of a time span into those time stamp markers is regularly based on real time.
@@ -242,7 +242,7 @@
 	  </t>
 	  <t>Managing time stamps and time span similarly, prevents code complexity.
 	  <vspace blankLines="1" />
-	  For example, many software is organized around I/O event notification mechanisms like the POSIX select() and poll() system C API calls.
+	  For example, many software is organized around I/O event notification mechanisms like the POSIX select() and poll() system C API functions.
 	  These functions wait for a given time span for file descriptors to become ready to perform I/O.
 	  The given time span is determined by substracting the smallest registered time stamp by the current real time value.
 	  When file descriptors are ready, the non-blocking I/O is performed, otherwise the given time span has passed and the action associated with the smallest registered time stamp needs to be performed.
@@ -284,10 +284,10 @@
 	<!-- <t>Since we have no choice but to use real time for time stamps, for the rest of the document we only discuss the case of time spans.</t> -->
 
         </section>
-    <section title = "Alternative Approaches">
-        <t> For time spans, where we only need the rate of passage of time to be same/close enough to the rest of the world,
-            one SHOULD not use the real time for the reasons mentioned above.
-            The other two timestamps available are raw time and adjusted raw time. The important aspect of these monotonic time
+    <section anchor="ALTIMP" title = "Alternative Approaches">
+        <t>For time spans, where we only need the rate of passage of time to be same/close enough to the rest of the world,
+            one SHOULD not use the real time to establish the start and end time mark for the reasons mentioned above.
+            The other two types of time are raw time and adjusted raw time. The important aspect of these monotonic time
             sources is not their current value, but the guarantee that the time source is strictly linearly increasing, and
             thus useful for calculating the difference in time between two samplings. But each comes with its own caveats.</t>
         <t><list>
@@ -301,11 +301,21 @@
                vulnerable to accuracy and security vulnerabilities of the underlying timing protocol.</t>
            </list></t>
             
-            <t>The choice of time value to be used is application-specific. For instance in applications that can tolerate
-                the clock-drift upto x, xan use MRT. However, if that is an issue then one has no choice but to fallback to MT.
-            Also, one important point of consideration is the leap second.</t>
-
-
+            <t>The choice of time value to be used is application-specific. For instance in applications that can tolerate a certain amount of
+                <xref target="CLOCKDRIFT">clock drift</xref>, can use raw time. However, if that is an issue then one has no choice but to fallback to adjusted raw time.</t>
+	<t>POSIX defines a system C API function which may provide raw time: clock_gettime(), when used with a clock_id of CLOCK_MONOTONIC (when supported by the system).
+           POSIX does not make a distinction between raw time and adjusted raw time in the definition of this function.
+	   Beware however that with some systems CLOCK_MONOTONIC deliveres adjusted raw time and that CLOCK_MONOTONIC_RAW needs to be used as clock_id to get unadjusted raw time.</t>
+	<t>Software employing the pattern organized around I/O event notification mechanisms, as described in section <xref target="CURIMP" /> should maintain two sorted lists of two different types of time stamps:<list style="numbers">
+	<t>One to register events based on time stamps expressed in wall clock time</t>
+	<t>One to register the start and end of time spans in (adjusted) raw time</t>
+	</list></t>
+	<t>To determine the timeout value for a call to select() or poll(), the program needs to get the current time in both real time and in (adjusted) raw time.
+	The current real time is substracted from the lowest value of the time stamps expressed in wall time list.
+	The current (adjusted) raw time from the lowest value of the time stamps expressed in (adjusted) raw time list.
+	The lowest of the values should be used as the timeout value for select() or poll() and determines which action should be performed when te function times out.</t>
+	<t>Alternatively a single list of (adjusted) raw time could be used for both time stamps and time spans.
+	   In that case time stamps expressed in wall clock time should be converted into (adjusted) raw time, by first converting it into a time span by substracting real time from it, and then adding the current time in (adjested) raw time.
         </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
@@ -318,7 +328,8 @@
     </section>
         
     <section title = "Security Considerations">
-        <t>ABC</t>
+        <t>Beware that clock_gettime() when used with clock_id CLOCK_MONOTONIC does not deliver raw time and could deliver adjusted raw time on some systems.
+	On those systems CLOCK_MONOTONIC_RAW needs to be used to get unadjusted raw time as descriped in section <xref target="ALTIMP" />.</t>
         </section>
   </middle>
 
@@ -379,6 +390,21 @@
             <date year="2015"/>
         </front>
       </reference>
+
+      <reference anchor="CLOCKDRIFT" target="http://downloads.hindawi.com/journals/jcnc/2008/583162.pdf">
+        <front>
+            <title>Internal clock drift estimation in computer clusters</title>
+            
+            <author initials="H." surname="Marouani" fullname="H. Marouani">
+                <organization/>
+            </author>
+            <author initials="M. R." surname="Dagenais" fullname="M. R. Dagenais">
+                <organization/>
+            </author>
+            <date year="2008"/>
+        </front>
+      </reference>
+
     </references>
   </back>
 </rfc>

@@ -112,6 +112,8 @@
               <t> As it is a purely subjective time, no general meaning can be
                   attached to any specific value. Only the amount of time passed
                   can be determined by comparing two values.</t>
+              <t> Because raw time is unaltered, its value is increasing monotonically
+                  at a near constant rate.</t>
           </section>
           <section title="Adjusted Raw Time">
               <t> Even if highly accurate oscillators are used, raw time passes at a
@@ -146,10 +148,13 @@
                   jump forward, its value may even decrease.</t>
           </section>
           <section title="Differences from Wall Time">
-              <t> These three clock types differ from wall time in two aspects.</t>
+              <t> These three clock types differ from wall time in three aspects.</t>
               <t> Both raw time and adjusted raw time can only represent differences
                   in time by comparing two clock values. Only real time provides
                   absolute time values that can be compared to wall time values.</t>
+              <t> On the other hand, raw time and adjusted raw time are montonically
+                  increasing whereas real time may experience sudden changes in its
+                  value.</t>
               <t> Only adjusted raw time and real time are adjusted so that time
                   passes at approximately the same rate as wall time. Raw time will
                   over time drift away due to inevitable imperfection of the clock.</t>
@@ -174,7 +179,6 @@
                 time as the time passed since a well-defined epoch, often
                 they are expressed as a complext date and time value tailored
                 for human consumption.</t>
-                <!-- Show an RFC 822 date example? -->
             <t> In order to validate a time stamp, a system needs access to
                 a clock that is reasonably close to wall time.</t>
         </section>

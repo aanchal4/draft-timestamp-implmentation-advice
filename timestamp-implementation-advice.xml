@@ -106,7 +106,6 @@
                   time; its unmodified, "raw time." This time is typically measured
                   by counting cycles of an oscillator. Its quality therefore relies on the
                   stability of this oscillator.</t>
-
               <t> As it is a purely subjective time, no general meaning can be
                   attached to any specific value. Only the amount of time passed
                   can be determined by comparing two values.</t>
@@ -143,65 +142,16 @@
               <t> As a consequence, real time is not monotonic. Not only may it
                   jump forward, its value may even decrease.</t>
           </section>
-          <!-- Martin's Note: I suggest we introduce the fact that some systems don't
-               explicitly declare raw time v. adjusted raw time only in the last section
-               where we talk about how to get those time values on the various systems.  -->
+          <section title="Differences from Wall Time">
+              <t> These three clock types differ from wall time in two aspects.</t>
+              <t> Both raw time and adjusted raw time can only represent differences
+                  in time by comparing two clock values. Only real time provides
+                  absolute time values that can be compared to wall time values.</t>
+              <t> Only adjusted raw time and real time are adjusted so that time
+                  passes at approximately the same rate as wall time. Raw time will
+                  over time drift away due to inevitable imperfection of the clock.</t>
+          </section>
       </section>
-      <!-- XXX Leaving this here to double check that all points are mentioned in the new text ...
-      <section title="Defining the Different Types of Clocks">
-          <t> There is no standardized terminology and definitions of times for different types of clocks
-              avaialble on modern operating systems (OS). For the purposes of this document, we define them here.
-              These are by no means standard names or definitions. Their only purpose is consistency and
-              clarity of the document. Different operating systems use these definitions but name them differently.
-              </t>
-          
-          <t>Wall Time : Represents time that is measured directly from the source
-            (atomic clocks, Geo Positioning Systems, etc.) as the amount of time elapsed since an epoch
-            (International Atomic Time, Universal Coordinated Time, etc).
-              This time can not be set and is not subject to changes by network timing protocols (Network Time Protocol, etc).
-              Ideally every one strives for this ideal time but no one (or not all) has direct access
-              to this time. Instead everyone has access to some perturbed version of this Wall time
-              as described below.</t>
-              <t>We define three different kinds of time values (clocks) each with its own imperfections:</t>
-              <t><list style="numbers">
-                  <t>Raw Time: Clock that represents monotonic time (linearly increasing) since some
-                      unspecified starting point. This clock measures the frequency of local oscillator and is not
-                      subject to adjustments by timing protocols (NTP, etc) or from setting the time.
-                      However, this time is different from the Wall time in two aspects.</t>
-                      <t><list style = "numbers">
-                      <t> It only represents the difference in time between a starting and ending point.</t>
-                      <t> It is subject to errors introduced by frequency drift of the oscillator. </t>
-                      </list></t>
-                  
-                  <t>Adjusted Raw Time: Clock that represents monotonic time (linearly increasing) since
-                      some unspecified starting point. This time is subject to adjustments by timing
-                      protocols but it does not reflect discontinuities (large jumps backwards or forwards)
-                      from setting the time or from adjustments by timing protocols. Rather, its rate of
-                      advance is just adjusted to correct for the error introduced by the frequency drift of oscillator
-                      with respect to real time (e.g. by NTP when there is a difference between the local
-                      oscillator and the upstream servers.) However, this time is different from the Wall
-                      time in two aspects.</t>
-                      <t><list style="numbers">
-                      <t>It only represents the difference in time between a
-                      starting and ending point. </t>
-                          <t> It is subject to changes by timing protocols.</t>
-                          </list></t>
-                  
-                 <t> Monotonic Time: Either raw time or adjusted raw time depending on the system.
-                  </t>
-                  
-                  <t>Real Time : Clock that represents the amount of time elapsed since an epoch.
-                      This clock represents what the system thinks the time is. Unlike adjusted raw time,
-                      real time can make large jumps both backwards and forward from setting the time
-                      or from adjustments by timing protocols. Real time, in some sense, could potentially
-                      represent the Wall clock time. In fact, the accuracy of this real time depends on the
-                      quality of timing protocols because the only difference between real time and
-                      Wall time is due to jumps/changes introduced by the timing protocols.</t>
-                  </list> </t>
-          
-          
-      </section>
-      -->
 
     <section title="Expressing Time">
         <t> Protocols or applications can express time in one of two forms,

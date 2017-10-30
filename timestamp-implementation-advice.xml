@@ -126,7 +126,7 @@
               <t> When this drift is componsated by comparing the passage of raw time
                   to some external time source that is considered to be closer to
                   wall time, the result is "adjusted raw time." This adjustment doesn't
-                  happen sporadically but rather, time is slowed down or sped up slightly
+                  happen sporadically but rather, the rate of advance of time is slowed down or sped up slightly
                   until it approaches the reference time again. As a result, adjusted
                   raw time is still monotonic. Like raw time, adjusted raw time is
                   subjective with no specific meaning attached to its values.</t>
@@ -144,7 +144,7 @@
                   January 1st, 1970 on Unix systems, time values themselves gather
                   meaning. The result is "real time."</t>
               <t> While it is often assumed that real time is set to match wall time,
-                  this doesn't need to be the case. An system's operator is free to
+                  this doesn't need to be the case. A system's operator is free to
                   change the value of real time at any time, likewise, system services
                   such as a local NTP client may decide to do so.</t>
               <t> As a consequence, real time is not monotonic. Not only may it
@@ -156,10 +156,9 @@
                   <t> Both raw time and adjusted raw time can only represent differences
                       in time by comparing two clock values. Only real time provides
                       absolute time values that can be compared to wall time values.</t>
-                  <t> On the other hand, raw time and adjusted raw time are monotonically
-                      increasing whereas real time may experience sudden changes in its
-                      value.</t>
-                  <t> Only adjusted raw time and real time are adjusted so that time
+                  <t> On the other hand, raw time and adjusted raw time are always monotonic whereas real time may experience sudden changes in
+                      value in either direction.</t>
+                  <t> Only adjusted raw time and real time are subject to external adjustments so that time
                       passes at approximately the same rate as wall time. Raw time will
                       over time drift away due to inevitable imperfections of the clock.</t>
               </list></t>
@@ -167,7 +166,7 @@
       </section>
 
     <section title="Expressing Time">
-        <t> Protocols or applications can express time in one of two forms,
+        <t> Protocols or applications can express time in one of the two forms,
             depending on whether global agreement over the point in time
             is necessary.</t>
 
@@ -229,7 +228,7 @@
                 make sure that this time is in sync with the rest of the world but on the other
                 hand makes it dependent on the correctness and security of timing protocols.</t>
             </list></t>
-           <t> Recent attacks <xref target="SECNTP"></xref>, <xref target="SECNTP1"></xref> show how timing protocols
+           <t> Recent attacks <xref target="SECNTP"></xref>, <xref target="MCBG"></xref> show how timing protocols
                like NTP can be leveraged to shift real time on systems.</t>
            <t>Time stamps are always based on wall time, so the best one can do is to use real time
                while dealing with them. However, this limitation does not hold for the time spans.
@@ -263,7 +262,7 @@
             <t> Raw time is not subject to any adjustments by timing protocols, i.e., it is not adjusted for the error
                 introduced by clock drift. This could have two repercussions. First, this
                 makes correctness of raw time independent from the errors or security vulnerabilities of the timing protocols. Second, its
-                correctness depends on the clock drift which further depends on various factors such as quality of the quartz,
+                correctness depends on the clock drift which further depends on various factors such as quality of the oscillator,
                 work load, or ambient temperature on the system and may vary.</t>
             <t> Adjusted raw time, on the other hand, is subject to adjustments by timing protocols. While it therefore compensates
                 for the errors introduced by the drift of the local clock, this time can be incorrect as it is
@@ -277,7 +276,7 @@
 	   Beware that with some systems, CLOCK_MONOTONIC deliveres adjusted raw time and that CLOCK_MONOTONIC_RAW needs to be used as clock_id to get unadjusted raw time.
 	   Non-POSIX systems may provide different APIs</t>
    
-    <t>Software employing the pattern organized around I/O event notification mechanisms, as described in section <xref target="CURIMP" />, should maintain two sorted lists of two different types of time stamps:<list style="numbers">
+    <t>Software employing the pattern organized around I/O event notification mechanisms, as described in <xref target="CURIMP" />, should maintain two sorted lists of two different types of time stamps:<list style="numbers">
 	<t>One to register events based on time stamps expressed in wall clock time</t>
 	<t>One to register the start and end of time spans in (adjusted) raw time</t>
 	</list></t>
@@ -299,8 +298,9 @@
     </section>
         
     <section title = "Security Considerations">
-        <t>Beware that clock_gettime() when used with clock_id CLOCK_MONOTONIC does not deliver raw time and could deliver adjusted raw time on some systems.
-	On those systems CLOCK_MONOTONIC_RAW needs to be used to get unadjusted raw time as descriped in section <xref target="ALTIMP" />.</t>
+      <t>Time is a fundamental component for the security guarantees claimed by various applications. Therefore, any implementor concerned with security should be concerned with how these time values are implemented. This document discusses the security considerations with respect to implementing time values in applications in various sections.
+        
+      </t>
         </section>
   </middle>
 
@@ -336,7 +336,7 @@
           </front>
           </reference>
         
-      <reference anchor="SECNTP1" target="https://eprint.iacr.org/2015/1020">
+      <reference anchor="MCBG" target="https://eprint.iacr.org/2015/1020">
         <front>
             <title>Attacking the Network Time Protocol</title>
             

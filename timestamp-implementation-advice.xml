@@ -114,9 +114,11 @@
               <t> As it is a purely subjective time, no general meaning can be
                   attached to any specific value. Only the amount of time passed
                   can be determined by comparing two values.</t>
-              <t> Because raw time is unaltered, its value is always increasing
-                  monotonically at a near constant rate. Such a time is
-                  sometimes called a "monotonic time."</t>
+              <t> Because raw time is unaltered, it is continuous and
+                  strictly monotonically increasing. Its value will always
+                  grow at a steady pace, never decrease, never make
+                  unexpected jumps, or stip. Such a time is sometimes
+                  called a "monotonic time."</t>
           </section>
           <section title="Adjusted Raw Time">
               <t> Even if highly accurate oscillators are used, raw time passes at a

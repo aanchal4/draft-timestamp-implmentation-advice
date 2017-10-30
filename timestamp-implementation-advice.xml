@@ -229,11 +229,30 @@
             </list></t>
     </section>
     <section title = "Current Implementation and Why is it bad?">
-        <t>Currently, most softwares take a common approach towards time stamps and time spans. </t>
-            <t> In a typical implemntations, time spans are registered as some event that will happen at some
-                point in the future. The value of that point in the future is then represented as real time timestamp.
-            </t>
-            <t>Using real time is bad because of the following reasons.
+        <t>Currently, some softwares takes a common approach towards time stamps and time spans.
+	   Time stamps are registered with their wall time value, and time spans are registered with two time stamp values marking the start and the end of the span.
+	   Conversion of a time span into those time stamp markers is regularly based on real time.
+	</t>
+	<t>Note that the start of a time span will be the current (real) time in case of a TTL.
+	   So, in case of an element that needs to be cached for a certain time, the start time stamp is irrelevant and it is registered together with only the (real) expiration time.</t>
+	<t>Programmers might have had different reason to base those markings on real time, for example:<list style="numbers">
+	  <t>A point in time is intuitively thought of as a wall clock time stamp.
+	  Time stamps from outside the software, which the software has to manage are already in wall clock time.
+	  The POSIX function to get the current (real) time which is regularly used for this, is gettimeofday(), which comes accross as providing wall clock time (or at least a value closest to it).
+	  </t>
+	  <t>By taking a common approach time stamps and time spans can be registered using the same system.
+	  <vspace blankLines="1" />
+	  For example, many software is organized around I/O event notification mechanisms like the POSIX select() and poll() system C API calls.
+	  These functions wait for a given time span for file descriptors to become ready to perform I/O.
+	  The given time span is determined by substracting the smallest registered time stamp by the current real time value.
+	  When file descriptors are ready, the non-blocking I/O is performed, otherwise the given time span has passed and the action associated with the smallest registered time stamp needs to be performed.
+	  <vspace blankLines="1" />
+	  For this programming pattern, a sorted list of time stamps has to be maintained by the software.
+	  To avoid coding complexity, programmers might prefer a single list for both actual wall clock time stamps and on real time based generated time stamps marking the end points of a time span.
+	  </t>
+	</list></t>
+
+            <t>Using real time as a basis for the time stamps marking the start and end of a time span is bad because of the following reasons.
                 </t>
             <t><list style="numbers">
                 <t>It can be set or overwritten manually,</t>
@@ -245,19 +264,24 @@
                like NTP can be leveraged to shift real time on systems.</t>
            <t>Time stamps are always based on wall time, so the best one can do is to use real time
                while dealing with them. However, this is not the limitation for the time spans. So we
-           can alternative ways to implement time spans which MAY prove to be more secure and robust.</t>
+           can have alternative ways to implement time spans which MAY prove to be more secure and robust.</t>
            
-            
-        <t>An obvious question to ask is that why do we need inception and expiration time stamps in the first place
-            to define the validity period of cryptographic objects? Why can not we just use time spans like TTL values instead?
-            The reason is straightforward. TTL values must be adjusted to account for the time elapsed between the times
-            that the object was generated and the recipient receives the object. For clarity, let us look at the example
-            of a caching DNS resolver. Suppose it has a cached unsigned DNS A record for www.google.com with initial TTL value of 300s.
-            Now when an entity X queries for www.google.com 20 sec later, the caching DNS resolver would reduce the TTL
-            value on the original cached response by 20 seconds before sending the response to X. However, this is not
-            possible for signed DNSSEC records as this would render these responses invalid in case they are messed with.</t>
+        <t><list>
+        <t>An obvious question to ask is that why do we need inception and expiration time stamps in the first place to define the validity period of cryptographic objects?
+	   Why can not we just use time spans like TTL values instead?
+           The reason is straightforward.
+	   <vspace blankLines="1" />
+	   The authority determining and setting the validity period on the object can be different from the operator delivering the object.
+	   For example the TTL value on DNS resource records indicate caching DNS resolvers how long to keep those resource records into cache.
+	   These are an operational matter and are thus left to the operators of the DNS zone.
+	   <vspace blankLines="1" />
+	   The content of the resource records are however determened by the signer of the records.
+	   When this is not the operator, it has no way to determine when the records will be queried for and thus as to rely on wall clock based time stamps to limit the validity.
+	   <vspace blankLines="1" />
+	   Note however that DNSSEC signatures do contain the original TTL of a resource record set, restricting the maximum TTL value with which the operator may deliver the resource records.  </t>
+	</list></t>
         
-            <t>  Since we have no choice but to use real time for time stamps, for the rest of the document we only discuss the case of time spans.  </t>
+	<!-- <t>Since we have no choice but to use real time for time stamps, for the rest of the document we only discuss the case of time spans.</t> -->
 
         </section>
     <section title = "Alternative Approaches">

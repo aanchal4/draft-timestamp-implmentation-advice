@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC5280 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5280.xml">
 <!ENTITY RFC5905 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5905.xml">
 ]>
 
@@ -166,8 +167,9 @@
                 systems, it needs to be stated in wall time.</t>
             <t> Time stamps are often used to express the validity of
                 objects with a limited lifetime that are shared over the
-                network. For instance, PKIX certificates [REF] carry two time
-                stamps expressing their earliest and latest validity.</t>
+                network. For instance, PKIX certificates
+                <xref target="RFC5280"/> carry two time stamps expressing
+                their earliest and latest validity.</t>
             <t> While time stamps are sometimes provided similarly to real
                 time as the time passed since a well-defined epoch, often
                 they are expressed as a complext date and time value tailored
@@ -268,6 +270,7 @@
     </references>
 
     <references title="Informative References">
+      &RFC5280;
       &RFC5905;
 
       <reference anchor="SECNTP" target="http://eprint.iacr.org/2016/1006">

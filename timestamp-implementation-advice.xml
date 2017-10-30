@@ -193,7 +193,7 @@
         </section>
     </section>
     <section anchor="CURIMP" title = "Current Implementation and Why is it bad?">
-        <t>Currently, some softwares takes a common approach towards time stamps and time spans.
+        <t>Currently, some software takes a common approach towards time stamps and time spans.
 	   Time stamps are registered with their wall time value, and time spans are registered with two time stamp values marking the start and the end of the span.
 	   Conversion of a time span into those time stamp markers is regularly based on real time.
 	</t>
@@ -228,7 +228,7 @@
                like NTP can be leveraged to shift real time on systems.</t>
            <t>Time stamps are always based on wall time, so the best one can do is to use real time
                while dealing with them. However, this limitation does not hold for the time spans.
-	       Managin time spans may be implemented in alternative ways which may prove to be more secure and robust.</t>
+	       Managing time spans may be implemented in alternative ways which may prove to be more secure and robust.</t>
            
         <t><list>
         <t>An obvious question to ask is: Why do we need inception and expiration time stamps in the first place to define the validity period of cryptographic objects?

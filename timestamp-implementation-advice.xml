@@ -85,87 +85,129 @@
         <t>In this document we describe the properties of various available time values on modern operating systems, discuss the trade-offs of using one over the other, and provide guidance to help implementors make an informed choice with some real-life examples.</t>
      </section>
 
-      <section title="Keeping Time: Different Clocks">
-          <t> Because time is relative to an observer, there cannot be a
-              universally agreed upon time. At best we can achieve an
-              approximation by updating our own observed time with a
-              common reference time shared with other observers.</t>
-          <t> As this reference time is what we naively assume clocks on a
-              wall are showing, we shall call it the "wall time." For most
-              applications, it is based on the Universal Coordinated Time
-              (UTC), an international standard time determined by averaging
-              the output of several high-precision time-keeping devices.
-              However, as UTC is following Earth's solar time, it occasionally
-              needs to be adjusted through leap seconds.</t>
-          <t> An individual computer system's preception of time differs from
-              this idealized wall time. Staying close to it requires some
-              effort that comes with its own set of drawbacks. Systems
-              therefore provide access to different types of clocks with
-              different properties. Unfortunately, there is no standard
-              terminology and definitions for these types. For the purpose of
-              this document, we therefore define three different kinds of
-              clocks that a system may or may not provide.</t>
+    <section title="Keeping Time: Wall Time and Various Clocks">
+      <t>
+        Even if one ignores the intricacies introduced by the relative nature
+        for a Newtonian view of an absolute time ticking away at a constant
+        rate, the varying inaccuracies of all practical time-keeping devices
+        make agreeing on a precise time difficult.
+        An approximation can be achieved by first defining how to arrive
+        at a shared reference time and then updating one's own clocks every
+        now and then.
+      </t><t>
+        Such a reference time is called a time scale. There are several
+        scales, but the most commonly used one is the Universal
+        Coordinated Time (UTC). As it represents what we naively think every
+        clock on a wall should be showing, we shall refer to it as "wall
+        time."
+      </t><t>
+        One curious property of UTC is that because it attempts to keep in
+        sync with the Earth's varying rotation, occassional leap seconds are
+        required. As a consequence, the difference between two UTC time
+        values is not necessarily equal to the time passed.
 
-          <section title="Raw Time">
-              <t> At its most fundamental, a system has its own perception of
-                  time; its unmodified, "raw time." This time is typically
-                  measured by counting cycles of an oscillator. Its quality
-                  therefore relies on the stability of this oscillator.</t>
-              <t> As it is a purely subjective time, no general meaning can be
-                  attached to any specific value. Only the amount of time passed
-                  can be determined by comparing two values.</t>
-              <t> Because raw time is unaltered, it is continuous and
-                  strictly monotonically increasing. Its value will always
-                  grow at a steady pace, never decrease, never make
-                  unexpected jumps, or stip. Such a time is sometimes
-                  called a "monotonic time."</t>
-          </section>
-          <section title="Adjusted Raw Time">
-              <t> Even if highly accurate oscillators are used, raw time passes at a
-                  slightly different rate than wall time. This difference is called
-                  clock drift. It depends not only on the quality of the time source but
-                  also on environmental factors such as temperature.</t>
-              <t> When this drift is componsated by comparing the passage of raw time
-                  to some external time source that is considered to be closer to
-                  wall time, the result is "adjusted raw time." This adjustment doesn't
-                  happen sporadically but rather, the rate of advance of time is slowed down or sped up slightly
-                  until it approaches the reference time again. As a result, adjusted
-                  raw time is still monotonic. Like raw time, adjusted raw time is
-                  subjective with no specific meaning attached to its values.</t>
-              <t> The most frequently used method of acquiring an external time source
-                  is through network timing protocols such as NTP
-                  <xref target="RFC5905"/>. As a
-                  result, adjusted raw time is susceptible to vulnerabilites of these
-                  protocols which may be exploited to maliciously manipulate this time.</t>
-          </section>
-          <section title="Real Time">
-              <t> With adjusted raw time, a system already has access to a time that
-                  passes at a rate very similar to wall time. By adjusting the time
-                  value so that it represents the time passed since an epoch, a
-                  well-defined point of wall time such as seconds since midnight
-                  January 1st, 1970 on Unix systems, time values themselves gather
-                  meaning. The result is "real time."</t>
-              <t> While it is often assumed that real time is set to match wall time,
-                  this doesn't need to be the case. A system's operator is free to
-                  change the value of real time at any time, likewise, system services
-                  such as a local NTP client may decide to do so.</t>
-              <t> As a consequence, real time is not monotonic. Not only may it
-                  jump forward, its value may even decrease.</t>
-          </section>
-          <section title="Differences from Wall Time">
-              <t> These three clock types differ from wall time in three aspects:</t>
-              <t><list style="symbols">
-                  <t> Both raw time and adjusted raw time can only represent differences
-                      in time by comparing two clock values. Only real time provides
-                      absolute time values that can be compared to wall time values.</t>
-                  <t> On the other hand, raw time and adjusted raw time are always monotonic whereas real time may experience sudden changes in
-                      value in either direction.</t>
-                  <t> Only adjusted raw time and real time are subject to external adjustments so that time
-                      passes at approximately the same rate as wall time. Raw time will
-                      over time drift away due to inevitable imperfections of the clock.</t>
-              </list></t>
-          </section>
+        <!-- What is a good term for this property that UTC is missing? -->
+      </t><t>
+        An individual computer system’s perception of time cannot be derived
+        directly from this wall time. Rather, it has to start from its own
+        internal time-keeping mechanism, i.e., its own internal clock, and
+        constantly update any differences to wall time using mechanisms
+        such as NTP <xref target="RFC5905"/>.
+      </t><t>
+        Because these mechanisms come with their own difficulties and
+        drawbacks, systems may provide access to different types of clocks
+        with varying properties.
+        Unfortunately, there is no standard
+        terminology and definitions for these types. For the purpose of
+        this document, we therefore define three different kinds of
+        clocks that a system may or may not provide.</t>
+      </t>
+      <section title="Raw Clock">
+        <t>
+          At its most fundamental, a system may provide access to its own,
+          unadultered perception of time, its "raw clock." This clock is
+          typically measuring time by counting cycles of an oscillator. Its
+          quality therefore relies on the stability of this oscillator.
+        </t><t>
+          As it is a purely subjective time; no general meaning can be
+          attached to any specific value. Only the amount of time passed
+          can be determined by comparing two values.
+        </t><t>
+          Because the raw clock is an unaltered counter, its is strictly
+          monotonically increasing. Its values will always grow at a steady
+          pace, never decrease, never make unexpected jumps, or stop.
+
+          <!-- Would it be fair to say that the raw clock is linear? -->
+        </t>
       </section>
+      <section title="Adjusted Raw Clock">
+        <t>
+          Even if highly accurate oscillators are used, a raw clock measures
+          time at a rate slightly differening from  wall time. This difference
+          is called "clock drift." It depends not only on the quality of the
+          time source but also on environmental factors such as temperature.
+          That is, drift will not be constant for a given clock but may
+          increase or decrease over time.
+        </t><t>
+          When this drift is componsated by comparing the time of the raw clock
+          to some external time source that is considered to be closer to wall
+          time, the result is the "adjusted raw clock." This adjustment doesn't
+          happen sporadically but rather, the rate of advance of time is slowed
+          down or sped up slightly until it approaches the reference time again.
+          As a result, adjusted raw time is still strictly monotonic
+          increasing. Like the raw clock, the adjusted raw clock is subjective
+          with no specific meaning attached to its values.
+        </t><t>
+          Since it can only work with an external time source, the adjusted
+          raw clock may is susceptible to vulnerabilites of these sources,
+          which may be exploited to maliciously manipulate this time.
+        </t>
+      </section>
+      <section title="Real Time Clock">
+        <!-- Maybe we need a better name now? -->
+        <t>
+          With the adjusted raw clock, a system already has access to a time
+          source that passes at a rate very similar to wall time. By
+          adjusting the time value so that it represents the time passed
+          since an epoch, a well-defined point of wall time such as seconds
+          since midnight January 1st, 1970 on Unix systems, time values
+          themselves gather meaning. The result is a "real time clock."
+        </t><t>
+          While it is often assumed that real time is set to match wall time,
+          this doesn't need to be the case. A system's operator is free to
+          change the value of real time at any time, likewise, system services
+          such as a local NTP client may decide to do so.
+        </t><t>
+          As a consequence, the real time clock is not strictly monotonically
+          increasing.  Not only may it jump forward, its values may even
+          decrease.
+        </t>
+      </section>
+      <section title="Differences from Wall Time">
+        <t>
+          These three clock types differ from wall time in three aspects:
+        </t>
+        <t><list style="symbols">
+          <t>
+            Both raw clock and adjusted raw clock can only represent
+            differences in time by comparing two clock values. Only the real
+            time clock provides absolute time values that can be compared to
+            wall time values.
+          </t><t>
+            On the other hand, raw clock and adjusted raw clock are always
+            strictly monotonically increasing whereas the real time clock may
+            experience sudden changes in value in either direction.
+          </t><t>
+            Only adjusted raw clock and real time clock are subject to
+            external adjustments so that time passes at approximately the
+            same rate as wall time. The raw clock will over time drift away
+            due to inevitable imperfections of the clock. Conversely, the
+            raw clock is imune to any manipulations introduced via the
+            external adjustments.
+          </t>
+        </list></t>
+      </section>
+  </section>
 
     <section title="Expressing Time">
         <t> Protocols or applications can express time in one of the two forms,

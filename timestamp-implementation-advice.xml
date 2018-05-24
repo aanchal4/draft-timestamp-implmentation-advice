@@ -108,7 +108,7 @@
 
         <!-- What is a good term for this property that UTC is missing? -->
       </t><t>
-        An individual computer system’s perception of time cannot be derived
+        An individual computer system's perception of time cannot be derived
         directly from this wall time. Rather, it has to start from its own
         internal time-keeping mechanism, i.e., its own internal clock, and
         constantly update any differences to wall time using mechanisms
@@ -120,7 +120,7 @@
         Unfortunately, there is no standard
         terminology and definitions for these types. For the purpose of
         this document, we therefore define three different kinds of
-        clocks that a system may or may not provide.</t>
+        clocks that a system may or may not provide.
       </t>
       <section title="Raw Clock">
         <t>

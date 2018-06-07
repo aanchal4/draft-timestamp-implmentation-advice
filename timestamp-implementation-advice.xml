@@ -31,6 +31,20 @@
             <email>aanchal4@bu.edu</email>
         </address>
     </author>
+
+    <author fullname="Kristof Teichel" initials="K." surname="Teichel">
+        <organization abbrev="PTB">Physikalisch-Technische Bundesanstalt</organization>
+        <address>
+            <postal>
+                <street>Bundesallee 100</street>
+                <city>Braunschweig</city>
+                <region></region>
+                <code>D-38116</code>
+                <country>Germany</country>
+            </postal>
+            <email>kristof.teichel@ptb.de</email>
+        </address>
+    </author>
     
     <author fullname="Martin Hoffmann" initials="M." surname="Hoffmann">
         <organization>Open Netlabs</organization>

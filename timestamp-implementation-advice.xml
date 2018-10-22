@@ -88,7 +88,10 @@ RFC7384 SYSTEM
     <keyword>timespans</keyword>
 
     <abstract>
-      <t>This document describes the properties of different types of time values available on digital systems and provides guidance on choices of these time values to the implementors of applications that use time in some form to provide the basic functionality and security guarantees.</t>
+      <t>
+        This document describes the properties of different types of time values available on digital systems.
+        Further, it provides guidance on choices of these time values to the implementors of applications that use time in some form to provide the basic functionality and security guarantees.
+      </t>
     </abstract>
   </front>
 
@@ -96,8 +99,9 @@ RFC7384 SYSTEM
     <section title="Introduction">
       <t>
         It is hard to understate the importance of time in modern digital systems. 
-        The functionality and security of distributed applications and those running locally on a system and that of network protocols hinges on some notion of time. 
-        For implementation, these applications and protocols have to choose one of the many types of time values available on the system, each of which has its own specific properties. However, currently these applications seem to be oblivious to the implications of choosing one or the other time value for implementation. 
+        The functionality and security of applications (distributed or local to one system) and that of network protocols generally hinge on some notion of time. 
+        For implementation, these applications and protocols have to choose one of the many types of time values available on their system, each of which has its own specific properties. 
+        However, currently these applications seem to be oblivious to the implications of choosing one or the other time value for implementation. 
         This behaviour can be attributed to: 
           a) the lack of clear understanding of the distinct properties of these time values, 
           b) trade-offs of using one or the other for an application, and 
@@ -118,8 +122,9 @@ RFC7384 SYSTEM
         This document does not describe functionality that is specific to the architecture of a PC, or other devices such as phones, IoT devices, switches, routers, base stations, synchrophasors.  
         Nor is the document applicable to a specific operating system. 
         Throughout the document we assume that one or the other time value is available on most devices. 
-        How these time values are available on different PCs, or other devices is out of scope of this document. 
-        We do not exactly recommend which time value should be used. We discuss the available options and trade-offs. 
+        How these time values are available on different PCs or other devices is out of scope of this document. 
+        We do not exactly recommend which time value should be used. 
+        We discuss the available options and trade-offs. 
         The final decision would vary depending on the availability of the kind of time values and the security requirements of the specific application under implementation. 
       </t>
       <t>
@@ -127,11 +132,12 @@ RFC7384 SYSTEM
         Also, throughout the document, we define the terms as they become relevant. 
         Different systems, depending on their OS, may use different terms for the same time values. 
         A survey on this is not in the scope of this document. 
-        We leave it to implementors to find out how to access these times or how these times are available on the device or OS that they are working on that is suitable to the application that they are going to use this time for. 
+        We leave it to implementors to find out how to access these time values or how these time values are available on the device or OS that they are working on that is suitable to the application that they are going to use this time for. 
         We will provide an example in the end for Linux. 
       </t>
     </section>
 
+    <!--
     <section title = "Definitions">
       <t><list style = "symbols">
         <t>
@@ -145,6 +151,7 @@ RFC7384 SYSTEM
         </t>
       </list></t>
     </section>
+    -->
 
     <section title = "Expressing Time">
       <t> 
@@ -193,29 +200,39 @@ RFC7384 SYSTEM
             The quality of this time is therefore dependent on either the stability of the oscillator or of the CPU timer. 
             Native time is purely subjective time - no general meaning can be attached to any specific value. 
             One can only obtain the relative time by comparing two values. 
-            Because native time is unaltered by any external or manula source, it is continuous and strictly monotonically increasing. 
+            Because native time is unaltered by any external or manual source, it is continuous and strictly monotonically increasing. 
             Its value always grow at a steady pace, never decreases, never make unexpected jumps, and never skips. 
             It is not subject to vulnerabilities or dependencies in external time sources. 
             However, even if highly accurate oscillators or CPU timers are used, native time is subject to clock drift. 
             Native time is not adjusted for the error introduced by clock drift. 
-            Thus th eaccuracy of this time is dependent on the clock drift which is further dependednt on factors including oscilator quality, system load, or ambient temperature, etc.
+            Thus the accuracy of this time is dependent on the clock drift which is further dependent on factors including oscilator quality, system load, or ambient temperature, etc.
           </t>
           <t>
-            World Time: The absolute time on a system is world time. 
-            One way to update system time is to manually enter the date and/or time.
-            One can also set the system time from the local machine by using the hardware time, which is maintained by a battery-powered clock that persists upon reboot. 
-            Alternatively, one can get the absolute time from the Internet, using a variety of timing protocols including the Network Time Protocol2 (NTP), Chrony, SNTP, OpenNTP and others. 
-            There are several problems with relying on world time. 
-            First, manual configurations can be subject to errors and misconfiguration. 
-            Also, for some machines, when moving between time zones, the system time must be corrected manually. 
-            Second, because accessing the hardware time requires an I/O operation which is resource intensive, many systems use hardware time only upon reboot, to initialize the system time; 
+            World Time: The absolute time on a system is world time.
+            There are several ways to coordinate a system's absolute time with its relative time.
+            The first is to update system time is to manually enter the date and/or time.
+            The second is to set the system time from the local machine by using the hardware time, which is maintained by a battery-powered clock that persists upon reboot. 
+            The third is to get absolute time from the Internet, using a variety of timing protocols including the Network Time Protocol2 (NTP), Chrony, SNTP, OpenNTP and others.
+            Each of these approaches has problems attached to it.
+          </t>
+            <!--There are several problems with relying on world time.-->
+          <t>
+            Manual configurations can be subject to errors and misconfiguration. 
+            Also, for some machines, when moving between time zones, the system time must be corrected manually.
+          </t>
+          <t>
+            Accessing the hardware time requires an I/O operation which is resource intensive, therefore many systems use hardware time only upon reboot, to initialize the system time; 
             subsequent updates to the system time are made either manually or through timing protocols. 
             However, systems like microcontrollers that operate within embedded systems (e.g., Raspberry Pi, Arduino, etc.) often lack internal hardware to keep track of time. 
-            When embedded systems require synchronization with the absolute time, they typically initialize their base time upon reboot by obtaining the current time from an external source (e.g., a timeserver or an external clock), or by asking the user to manually enter the current time. 
-            Third, relying on Internet timing protocols opens up the system time to attack. 
+            When embedded systems require synchronization with the absolute time, they typically initialize their base time upon reboot by obtaining the current time from an external source (e.g., a timeserver or an external clock), or by asking the user to manually enter the current time.
+          </t>
+          <t>
+            Relying on Internet timing protocols opens up the system time to attack. 
             Recent papers show vulnerabilities in NTP [57, 59, 58] and SNTP [73] that allow attackers to maliciously alter system time - pushing system time into the past or even into the future. 
-            Moreover, many of these time-shifting attacks can be performed by off-path attackers,who do not occupy a privileged position on the network between the victim system and its time sources on the Internet. 
-            Researchers have also demonstrated off-path denial of service attacks on timing protocols that prevent systems from synchronizing their clocks. 
+            Moreover, many of these time-shifting attacks can be performed by off-path attackers, who do not occupy a privileged position on the network between the victim system and its time sources on the Internet. 
+            Researchers have also demonstrated off-path denial of service attacks on timing protocols that prevent systems from synchronizing their clocks.
+          </t>
+          <t>
             The bottom line is that obtaining world time from an external sources create dependencies that can be exploited.
           </t>
         </list>
@@ -331,8 +348,9 @@ RFC7384 SYSTEM
            <t> Recent attacks <xref target="SECNTP"></xref>, <xref target="MCBG"></xref> show how timing protocols like NTP can be leveraged to shift real time on systems.</t> -->
         
        <t>
-         Absolute time is always based on wall time, so the best one can do is to use world time while dealing with them. 
-         However, this limitation does not hold for the relative time. 
+         Absolute time is always based on wall time, so the best one can do is to use world time while dealing with them.
+         <!-- KT: Dealing with whom? I do not understand the sentence.-->
+         However, this limitation does not hold for relative time. 
          Managing relative time may be implemented in alternative ways which may prove to be more secure and robust.
        </t>
            
@@ -361,7 +379,8 @@ RFC7384 SYSTEM
         For relative time, where we only need the rate of passage of time to be close enough to the rest of the world, one does not have to necessarily rely on world time to establish the start and end time for the reasons mentioned above.
       </t>
       <t> 
-        The other type of time is native time. 
+        The other type of time is native time.
+        <!-- KT: Other type as opposed to what? I am missing context. -->
         The important aspect of this monotonic time source is not its current value but the guarantee that the time source is linearly increasing and thus useful for calculating the difference in time between two samplings. 
         But it comes with its own caveats.
       </t>
@@ -391,7 +410,7 @@ RFC7384 SYSTEM
         POSIX defines a system C API function which may provide native time: 
         clock_gettime(), when used with a clock_id of CLOCK_MONOTONIC (when supported by the system). 
         POSIX does not make a distinction between raw time and adjusted raw time in the definition of this function. 
-        Beware that with some systems, CLOCK_MONOTONIC deliveres adjusted raw time and that CLOCK_MONOTONIC_RAW needs to be used as clock_id to get unadjusted raw time. 
+        Beware that, with some systems, CLOCK_MONOTONIC deliveres adjusted raw time and that CLOCK_MONOTONIC_RAW needs to be used as clock_id to get unadjusted raw time. 
         Non-POSIX systems may provide different APIs
       </t>
       <t>
@@ -410,7 +429,7 @@ RFC7384 SYSTEM
         The current real time is substracted from the lowest value of the time stamps expressed in wall time list.
         The current (adjusted) raw time from the lowest value of the time stamps expressed in (adjusted) raw time list.
         The lowest of the values should be used as the timeout value for select() or poll() and determines which action should be performed when te function times out.
-        </t>
+      </t>
       <t>
         Alternatively a single list of (adjusted) raw time could be used for both time stamps and time spans.
         In that case time stamps expressed in wall clock time should be converted into (adjusted) raw time, by first converting it into a time span by substracting real time from it, and then adding the current time in (adjested) raw time.

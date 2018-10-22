@@ -88,15 +88,31 @@ RFC7384 SYSTEM
     <keyword>timespans</keyword>
 
     <abstract>
-      <t>This document describes the properties of different types of time
-        values available on digital systems and provides guidance on choices of these time values to the implementors of applications that use time in some form to provide the basic functionality and security guarantees.</t>
+      <t>This document describes the properties of different types of time values available on digital systems and provides guidance on choices of these time values to the implementors of applications that use time in some form to provide the basic functionality and security guarantees.</t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction">
-      <t>It is hard to understate the importance of time in modern digital systems. The functionality and security of distributed applications and those running locally on a system and that of network protocols hinges on some notion of time. For implementation, these applications and protocols have to choose one of the many types of time values available on the system, each of which has its own specific properties. However, currently these applications seem to be oblivious to the implications of choosing one or the other time value for implementation. This behaviour can be attributed to: a) the lack of clear understanding of the distinct properties of these time values, b) trade-offs of using one or the other for an application, and c) availability and compatibilty of these time values on different systems. This document discusses a) and b). </t>
-      <t> More specifically, in this document we first define different time values used by protocols and applications to express time. We then define properties of time values maintained by modern digital systems. Next we describe how systems obtain these time values and security considerations of using these time values to implement protocols and applications that use time. Finally we discuss trade-offs between security and precision of choosing one or the other kind of time value. The document aims to provide guidance to the implementors make an informed choice with an example of POSIX system. </t>
+      <t>
+        It is hard to understate the importance of time in modern digital systems. 
+        The functionality and security of distributed applications and those running locally on a system and that of network protocols hinges on some notion of time. 
+        For implementation, these applications and protocols have to choose one of the many types of time values available on the system, each of which has its own specific properties. 
+        However, currently these applications seem to be oblivious to the implications of choosing one or the other time value for implementation. 
+        This behaviour can be attributed to: 
+        a) the lack of clear understanding of the distinct properties of these time values, 
+        b) trade-offs of using one or the other for an application, and 
+        c) availability and compatibilty of these time values on different systems. 
+        This document discusses a) and b). 
+      </t>
+      
+      <t> 
+        More specifically, in this document we first define different time values used by protocols and applications to express time. 
+        We then define properties of time values maintained by modern digital systems. 
+        Next we describe how systems obtain these time values and security considerations of using these time values to implement protocols and applications that use time. 
+        Finally we discuss trade-offs between security and precision of choosing one or the other kind of time value. 
+        The document aims to provide guidance to the implementors make an informed choice with an example of POSIX system. 
+      </t>
 
      </section>
 

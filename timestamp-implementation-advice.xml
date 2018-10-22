@@ -111,9 +111,9 @@ RFC7384 SYSTEM
         Finally we discuss trade-offs between security and precision of choosing one or the other kind of time value. 
         The document aims to provide guidance to the implementors make an informed choice with an example of POSIX system. 
       </t>
-     </section>
+    </section>
 
-     <section title = "Scope of the document">
+    <section title = "Scope of the document">
       <t> 
         This document does not describe functionality that is specific to the architecture of a PC, or other devices such as phones, IoT devices, switches, routers, base stations, synchrophasors.  
         Nor is the document applicable to a specific operating system. 
@@ -132,38 +132,40 @@ RFC7384 SYSTEM
       </t>
     </section>
 
-      <section title = "Definitions">
-        <t><list style = "symbols">
-          <t>
-            Time, Timescale: Time is an abstraction which determines the ordering of events in a given frame of reference called timescale.
-          </t>
-          <t>
-            Oscillator: An oscillator is a device that outputs trigger signals, which are (to a given tolerance level) equidistant with respect to a timescale.
-          </t>
-          <t>
-            (Physical) Clock, Counter: A (physical) clock is a device composed of an oscillator and a counter, where the counter records a number of cycles since its initialization, with increments triggered by the oscillator. 
-          </t>
+    <section title = "Definitions">
+      <t><list style = "symbols">
+        <t>
+          Time, Timescale: Time is an abstraction which determines the ordering of events in a given frame of reference called timescale.
+        </t>
+        <t>
+          Oscillator: An oscillator is a device that outputs trigger signals, which are (to a given tolerance level) equidistant with respect to a timescale.
+        </t>
+        <t>
+          (Physical) Clock, Counter: A (physical) clock is a device composed of an oscillator and a counter, where the counter records a number of cycles since its initialization, with increments triggered by the oscillator. 
+        </t>
       </list></t>
-     </section>
+    </section>
 
     <section title = "Expressing Time">
-    <t> 
-      Protocols and applications can express time in several forms, depending on whether or not universal agreement is required about that point in time. 
-      This section focuses on the differences between absolute time and relative time.
-      </t>
-    <t><list style = "symbols">
-      <t>
-        Absolute time expresses an absolute point in time (e.g., June 13, 2018 at 1:32:09pm). 
-        For instance, Unix Time is seconds since midnight January 1st, 1970, while Universal Coordinated Time (UTC) is an international time scale that forms the basis for the coordinated dissemination of standard frequencies and time signals. 
-        Absolute time is often used to express the validity of objects with a limited lifetime that are shared over the network. 
-        In order to validate absolute time value, a system needs access to a reasonably close reference time, for instance one based on the UTC. 
-      </t>
       <t> 
-        Relative time measures the time interval that has elapsed from some reference point (e.g., 20 minutes from the time of your query). 
-        Relative time is commonly used in network protocols, e.g., to determine when a packet should be considered dropped, or e.g., to set Time To Live (TTL) values that govern the length of time for which an object is valid or usable. 
-        Relative time does not require access to the UTC time, or any other absolute time metric only the rate of passage of his time across different systems is important. 
+        Protocols and applications can express time in several forms, depending on whether or not universal agreement is required about that point in time. 
+        This section focuses on the differences between absolute time and relative time.
       </t>
-    </list></t>
+      <t>
+        <list style = "symbols">
+          <t>
+            Absolute time expresses an absolute point in time (e.g., June 13, 2018 at 1:32:09pm). 
+            For instance, Unix Time is seconds since midnight January 1st, 1970, while Universal Coordinated Time (UTC) is an international time scale that forms the basis for the coordinated dissemination of standard frequencies and time signals. 
+            Absolute time is often used to express the validity of objects with a limited lifetime that are shared over the network. 
+            In order to validate absolute time value, a system needs access to a reasonably close reference time, for instance one based on the UTC. 
+          </t>
+          <t> 
+            Relative time measures the time interval that has elapsed from some reference point (e.g., 20 minutes from the time of your query). 
+            Relative time is commonly used in network protocols, e.g., to determine when a packet should be considered dropped, or e.g., to set Time To Live (TTL) values that govern the length of time for which an object is valid or usable. 
+            Relative time does not require access to the UTC time, or any other absolute time metric only the rate of passage of his time across different systems is important. 
+          </t>
+        </list>
+      </t>
     </section>
 
     <section title = "Keeping Time: Different Clocks">
@@ -182,37 +184,42 @@ RFC7384 SYSTEM
         -->
       </t>
 
-      <t><list style = "symbols">
-        <t> 
-          Native Time: The relative time on a system is native time. 
-          At its most fundamental, a system has its own perception of time; its unmodified, native time. 
-          This time is typically measured by counting cycles of an oscillator but systems may also use process CPU times or thread CPU time (via timers from the CPU). 
-          The quality of this time is therefore dependent on either the stability of the oscillator or of the CPU timer. 
-          Native time is purely subjective time - no general meaning can be attached to any specific value. 
-          One can only obtain the relative time by comparing two values. 
-          Because native time is unaltered by any external or manula source, it is continuous and strictly monotonically increasing. 
-          Its value always grow at a steady pace, never decreases, never make unexpected jumps, and never skips. 
-          It is not subject to vulnerabilities or dependencies in external time sources. 
-          However, even if highly accurate oscillators or CPU timers are used, native time is subject to clock drift. 
-          Native time is not adjusted for the error introduced by clock drift. 
-          Thus th eaccuracy of this time is dependent on the clock drift which is further dependednt on factors including oscilator quality, system load, or ambient temperature, etc.
-        </t>
-        <t>
-          World Time: The absolute time on a system is world time. 
-          One way to update system time is to manually enter the date and/or time.One can also set the system time from the local machine by using the hardware time, which is maintained by a battery-powered clock that persists upon reboot. 
-          Alternatively, one can get the absolute time from the Internet, using a variety of timing protocols including the Network Time Protocol2 (NTP), Chrony, SNTP, OpenNTP and others. 
-          There are several problems with relying on world time. 
-          First, manual configurations can be subject to errors and misconfiguration. 
-          Also, for some machines, when moving between time zones, the system time must be corrected manually. 
-          Second, because accessing the hardware time requires an I/O operation which is resource intensive, many systems use hardware time only upon reboot, to initialize the system time; subsequent updates to the system time are made either manually or through timing protocols. 
-          However, systems like microcontrollers that operate within embedded systems (e.g., Raspberry Pi, Arduino, etc.) often lack internal hardware to keep track of time. 
-          When embedded systems require synchronization with the absolute time, they typically initialize their base time upon reboot by obtaining the current time from an external source (e.g., a timeserver or an external clock), or by asking the user to manually enter the current time. 
-          Third, relying on Internet timing protocols opens up the system time to attack. Recent papers show vulnerabilities in NTP [57, 59, 58] and SNTP [73] that allow attackers to maliciously alter system time - pushing system time into the past or even into the future. 
-          Moreover, many of these time-shifting attacks can be performed by off-path attackers,who do not occupy a privileged position on the network between the victim system and its time sources on the Internet. 
-          Researchers have also demonstrated off-path denial of service attacks on timing protocols that prevent systems from synchronizing their clocks. 
-          The bottom line is that obtaining world time from an external sources create dependencies that can be exploited.
-        </t>
-      </list></t>
+      <t>
+        <list style = "symbols">
+          <t> 
+            Native Time: The relative time on a system is native time. 
+            At its most fundamental, a system has its own perception of time; its unmodified, native time. 
+            This time is typically measured by counting cycles of an oscillator but systems may also use process CPU times or thread CPU time (via timers from the CPU). 
+            The quality of this time is therefore dependent on either the stability of the oscillator or of the CPU timer. 
+            Native time is purely subjective time - no general meaning can be attached to any specific value. 
+            One can only obtain the relative time by comparing two values. 
+            Because native time is unaltered by any external or manula source, it is continuous and strictly monotonically increasing. 
+            Its value always grow at a steady pace, never decreases, never make unexpected jumps, and never skips. 
+            It is not subject to vulnerabilities or dependencies in external time sources. 
+            However, even if highly accurate oscillators or CPU timers are used, native time is subject to clock drift. 
+            Native time is not adjusted for the error introduced by clock drift. 
+            Thus th eaccuracy of this time is dependent on the clock drift which is further dependednt on factors including oscilator quality, system load, or ambient temperature, etc.
+          </t>
+          <t>
+            World Time: The absolute time on a system is world time. 
+            One way to update system time is to manually enter the date and/or time.
+            One can also set the system time from the local machine by using the hardware time, which is maintained by a battery-powered clock that persists upon reboot. 
+            Alternatively, one can get the absolute time from the Internet, using a variety of timing protocols including the Network Time Protocol2 (NTP), Chrony, SNTP, OpenNTP and others. 
+            There are several problems with relying on world time. 
+            First, manual configurations can be subject to errors and misconfiguration. 
+            Also, for some machines, when moving between time zones, the system time must be corrected manually. 
+            Second, because accessing the hardware time requires an I/O operation which is resource intensive, many systems use hardware time only upon reboot, to initialize the system time; 
+            subsequent updates to the system time are made either manually or through timing protocols. 
+            However, systems like microcontrollers that operate within embedded systems (e.g., Raspberry Pi, Arduino, etc.) often lack internal hardware to keep track of time. 
+            When embedded systems require synchronization with the absolute time, they typically initialize their base time upon reboot by obtaining the current time from an external source (e.g., a timeserver or an external clock), or by asking the user to manually enter the current time. 
+            Third, relying on Internet timing protocols opens up the system time to attack. 
+            Recent papers show vulnerabilities in NTP [57, 59, 58] and SNTP [73] that allow attackers to maliciously alter system time - pushing system time into the past or even into the future. 
+            Moreover, many of these time-shifting attacks can be performed by off-path attackers,who do not occupy a privileged position on the network between the victim system and its time sources on the Internet. 
+            Researchers have also demonstrated off-path denial of service attacks on timing protocols that prevent systems from synchronizing their clocks. 
+            The bottom line is that obtaining world time from an external sources create dependencies that can be exploited.
+          </t>
+        </list>
+      </t>
                   <!-- <section title="Adjusted Raw Time">
               <t> Even if highly accurate oscillators are used, raw time passes at a
                   slightly different rate than wall time. This difference is called
@@ -344,156 +351,158 @@ RFC7384 SYSTEM
      Note however that DNSSEC signatures do contain the original TTL of a resource record set, restricting the maximum TTL value with which the operator may deliver the resource records.  </t>
   </list></t> -->
         
-    <t>
-      Since we have no choice but to use world time for absolute time, for the rest of the document we only discuss the case of relative time.
-    </t>
-  </section>
+      <t>
+        Since we have no choice but to use world time for absolute time, for the rest of the document we only discuss the case of relative time.
+      </t>
+    </section>
     
-  <section anchor="ALTIMP" title = "Alternative Approaches">
-    <t>
-      For relative time, where we only need the rate of passage of time to be close enough to the rest of the world, one does not have to necessarily rely on world time to establish the start and end time for the reasons mentioned above.
-    </t>
-    <t> 
-      The other type of time is native time. 
-      The important aspect of this monotonic time source is not its current value but the guarantee that the time source is linearly increasing and thus useful for calculating the difference in time between two samplings. 
-      But it comes with its own caveats.
-    </t>
-    <t>
-      <list>
+    <section anchor="ALTIMP" title = "Alternative Approaches">
+      <t>
+        For relative time, where we only need the rate of passage of time to be close enough to the rest of the world, one does not have to necessarily rely on world time to establish the start and end time for the reasons mentioned above.
+      </t>
       <t> 
-          Native time is not subject to any adjustments by timing protocols, i.e., it is not adjusted for the error introduced by clock drift. 
-          This could have two repercussions. First, this makes the correctness of native time independent from the errors or security vulnerabilities of the timing protocols. 
-          Second, its correctness depends on the clock drift which further depends on various factors such as quality of the oscillator, work load, or ambient temperature on the system and may vary.
+        The other type of time is native time. 
+        The important aspect of this monotonic time source is not its current value but the guarantee that the time source is linearly increasing and thus useful for calculating the difference in time between two samplings. 
+        But it comes with its own caveats.
       </t>
-        <!-- <t> Adjusted raw time, on the other hand, is subject to adjustments by timing protocols. While it therefore compensates
-            for the errors introduced by the drift of the local clock, this time can be incorrect as it is
-            vulnerable to accuracy and security vulnerabilities of the underlying timing protocol.</t> -->
-      </list>
-    </t>
-
-    <t>
-       The choice of time value to be used is application-specific. 
-       For instance in applications that can tolerate a certain amount of clock drift, implementers can use native time. 
-       However, if that is an issue then one has no choice but to fall back to world time.
-    </t>
-  </section>
-
-  <section title = "POSIX example">
-    <t>
-      POSIX defines a system C API function which may provide native time: 
-      clock_gettime(), when used with a clock_id of CLOCK_MONOTONIC (when supported by the system). 
-      POSIX does not make a distinction between raw time and adjusted raw time in the definition of this function. 
-      Beware that with some systems, CLOCK_MONOTONIC deliveres adjusted raw time and that CLOCK_MONOTONIC_RAW needs to be used as clock_id to get unadjusted raw time. 
-      Non-POSIX systems may provide different APIs
-    </t>
-    <t>
-      Software employing the pattern organized around I/O event notification mechanisms, as described in previous section, should maintain two sorted lists of two different types of time stamps:
-      <list style="numbers">
-        <t>
-          One to register events based on time stamps expressed in wall clock time
+      <t>
+        <list>
+        <t> 
+            Native time is not subject to any adjustments by timing protocols, i.e., it is not adjusted for the error introduced by clock drift. 
+            This could have two repercussions. 
+          First, this makes the correctness of native time independent from the errors or security vulnerabilities of the timing protocols. 
+            Second, its correctness depends on the clock drift which further depends on various factors such as quality of the oscillator, work load, or ambient temperature on the system and may vary.
         </t>
-        <t>
-          One to register the start and end of time spans in (adjusted) raw time
-        </t>
-      </list>
-    </t>
-    <t>
-      To determine the timeout value for a call to select() or poll(), the program needs to get the current time in both real time and in (adjusted) raw time.
-      The current real time is substracted from the lowest value of the time stamps expressed in wall time list.
-      The current (adjusted) raw time from the lowest value of the time stamps expressed in (adjusted) raw time list.
-      The lowest of the values should be used as the timeout value for select() or poll() and determines which action should be performed when te function times out.
+          <!-- <t> Adjusted raw time, on the other hand, is subject to adjustments by timing protocols. While it therefore compensates
+              for the errors introduced by the drift of the local clock, this time can be incorrect as it is
+              vulnerable to accuracy and security vulnerabilities of the underlying timing protocol.</t> -->
+        </list>
       </t>
-    <t>
-      Alternatively a single list of (adjusted) raw time could be used for both time stamps and time spans.
-      In that case time stamps expressed in wall clock time should be converted into (adjusted) raw time, by first converting it into a time span by substracting real time from it, and then adding the current time in (adjested) raw time.
-    </t>
-  </section>
 
-  <section anchor="Acknowledgements" title="Acknowledgements">
-    <t>
-      We are thankful to Sharon Goldberg and Benno Overreinder for useful discussions.
-    </t>
-  </section>
+      <t>
+         The choice of time value to be used is application-specific. 
+         For instance in applications that can tolerate a certain amount of clock drift, implementers can use native time. 
+         However, if that is an issue then one has no choice but to fall back to world time.
+      </t>
+    </section>
 
-  <section anchor="IANA" title="IANA Considerations">
-    <t>This memo includes no request to IANA.</t>
-  </section>
+    <section title = "POSIX example">
+      <t>
+        POSIX defines a system C API function which may provide native time: 
+        clock_gettime(), when used with a clock_id of CLOCK_MONOTONIC (when supported by the system). 
+        POSIX does not make a distinction between raw time and adjusted raw time in the definition of this function. 
+        Beware that with some systems, CLOCK_MONOTONIC deliveres adjusted raw time and that CLOCK_MONOTONIC_RAW needs to be used as clock_id to get unadjusted raw time. 
+        Non-POSIX systems may provide different APIs
+      </t>
+      <t>
+        Software employing the pattern organized around I/O event notification mechanisms, as described in previous section, should maintain two sorted lists of two different types of time stamps:
+        <list style="numbers">
+          <t>
+            One to register events based on time stamps expressed in wall clock time
+          </t>
+          <t>
+            One to register the start and end of time spans in (adjusted) raw time
+          </t>
+        </list>
+      </t>
+      <t>
+        To determine the timeout value for a call to select() or poll(), the program needs to get the current time in both real time and in (adjusted) raw time.
+        The current real time is substracted from the lowest value of the time stamps expressed in wall time list.
+        The current (adjusted) raw time from the lowest value of the time stamps expressed in (adjusted) raw time list.
+        The lowest of the values should be used as the timeout value for select() or poll() and determines which action should be performed when te function times out.
+        </t>
+      <t>
+        Alternatively a single list of (adjusted) raw time could be used for both time stamps and time spans.
+        In that case time stamps expressed in wall clock time should be converted into (adjusted) raw time, by first converting it into a time span by substracting real time from it, and then adding the current time in (adjested) raw time.
+      </t>
+    </section>
 
-  <section title = "Security Considerations">
-    <t>
-      Time is a fundamental component for the security guarantees claimed by various applications. 
-      A system that uses a time distribution protocol may be affected by the security aspects of the time protocol. 
-      The security considerations of time protocols in general are discussed in <xref target="RFC7384"/>.  
-      This document discusses the security considerations with respect to implementing time values in applications in various sections.        
-    </t>
-  </section>
-</middle>
+    <section anchor="Acknowledgements" title="Acknowledgements">
+      <t>
+        We are thankful to Sharon Goldberg and Benno Overreinder for useful discussions.
+      </t>
+    </section>
 
-<back>
-  <references title="Informative References">
-    &RFC5280;
-    &RFC5905;
-    &RFC7384;
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This memo includes no request to IANA.</t>
+    </section>
 
-    <reference anchor="SECNTP" target="http://eprint.iacr.org/2016/1006">
-      <front>
-        <title>The Security of NTP's Datagram Protocol</title>
+    <section title = "Security Considerations">
+      <t>
+        Time is a fundamental component for the security guarantees claimed by various applications. 
+        A system that uses a time distribution protocol may be affected by the security aspects of the time protocol. 
+        The security considerations of time protocols in general are discussed in <xref target="RFC7384"/>.  
+        This document discusses the security considerations with respect to implementing time values in applications in various sections.        
+      </t>
+    </section>
+  </middle>
 
-        <author initials="A." surname="Malhotra" fullname="A. Malhotra">
-          <organization/>
-        </author>
-        <author initials="M. V." surname="Gundy" fullname="M. V. Gundy">
-          <organization/>
-        </author>
-        <author initials="M." surname="Varia" fullname="M. Varia">
-          <organization/>
-        </author>
-        <author initials="H." surname="Kennedy" fullname="H. Kennedy">
-          <organization/>
-        </author>
-        <author initials="J." surname="Gardner" fullname="J. Gardner">
-          <organization/>
-        </author>
-        <author initials="S." surname="Goldberg" fullname="S. Goldberg">
-          <organization/>
-        </author>
-         <date year="2016"/>
-        </front>
-        </reference>
-      
-    <reference anchor="MCBG" target="https://eprint.iacr.org/2015/1020">
-      <front>
-          <title>Attacking the Network Time Protocol</title>
-          
+  <back>
+    <references title="Informative References">
+      &RFC5280;
+      &RFC5905;
+      &RFC7384;
+
+      <reference anchor="SECNTP" target="http://eprint.iacr.org/2016/1006">
+        <front>
+          <title>The Security of NTP's Datagram Protocol</title>
+
           <author initials="A." surname="Malhotra" fullname="A. Malhotra">
             <organization/>
           </author>
-          <author initials="I." surname="Cohen" fullname="I. Cohen">
+          <author initials="M. V." surname="Gundy" fullname="M. V. Gundy">
             <organization/>
           </author>
-          <author initials="E." surname="Brakke" fullname="E. Brakke">
-              <organization/>
+          <author initials="M." surname="Varia" fullname="M. Varia">
+            <organization/>
+          </author>
+          <author initials="H." surname="Kennedy" fullname="H. Kennedy">
+            <organization/>
+          </author>
+          <author initials="J." surname="Gardner" fullname="J. Gardner">
+            <organization/>
           </author>
           <author initials="S." surname="Goldberg" fullname="S. Goldberg">
-              <organization/>
+            <organization/>
           </author>
-          
-          <date year="2015"/>
-      </front>
-    </reference>
-     <reference anchor="CLOCKDRIFT" target="http://downloads.hindawi.com/journals/jcnc/2008/583162.pdf">
-      <front>
-          <title>Internal clock drift estimation in computer clusters</title>
-          
-          <author initials="H." surname="Marouani" fullname="H. Marouani">
+           <date year="2016"/>
+          </front>
+          </reference>
+
+      <reference anchor="MCBG" target="https://eprint.iacr.org/2015/1020">
+        <front>
+            <title>Attacking the Network Time Protocol</title>
+
+            <author initials="A." surname="Malhotra" fullname="A. Malhotra">
               <organization/>
-          </author>
-          <author initials="M. R." surname="Dagenais" fullname="M. R. Dagenais">
+            </author>
+            <author initials="I." surname="Cohen" fullname="I. Cohen">
               <organization/>
-          </author>
-          <date year="2008"/>
-      </front>
-    </reference>
-  </references>
-</back>
+            </author>
+            <author initials="E." surname="Brakke" fullname="E. Brakke">
+                <organization/>
+            </author>
+            <author initials="S." surname="Goldberg" fullname="S. Goldberg">
+                <organization/>
+            </author>
+
+            <date year="2015"/>
+        </front>
+      </reference>
+       <reference anchor="CLOCKDRIFT" target="http://downloads.hindawi.com/journals/jcnc/2008/583162.pdf">
+        <front>
+            <title>Internal clock drift estimation in computer clusters</title>
+
+            <author initials="H." surname="Marouani" fullname="H. Marouani">
+                <organization/>
+            </author>
+            <author initials="M. R." surname="Dagenais" fullname="M. R. Dagenais">
+                <organization/>
+            </author>
+            <date year="2008"/>
+        </front>
+      </reference>
+    </references>
+  </back>
+  
 </rfc>

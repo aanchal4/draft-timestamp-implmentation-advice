@@ -50,7 +50,7 @@ RFC7384 SYSTEM
     </author>
     
     <author fullname="Martin Hoffmann" initials="M." surname="Hoffmann">
-        <organization>Open Netlabs</organization>
+        <organization>NLnet Labs</organization>
         <address>
             <postal>
                 <street>Science Park 400</street>
@@ -59,7 +59,7 @@ RFC7384 SYSTEM
                 <code>1098 XH</code>
                 <country>Netherlands</country>
             </postal>
-            <email>martin@opennetlabs.com</email>
+            <email>martin@nlnetlabs.nl</email>
         </address>
     </author>
     
@@ -89,8 +89,8 @@ RFC7384 SYSTEM
 
     <abstract>
       <t>
-        This document describes the properties of different types of time values available on digital systems.
-        Further, it provides guidance on choices of these time values to the implementors of applications that use time in some form to provide the basic functionality and security guarantees.
+        This document describes the properties of different types of time values available on digital systems
+        and provides guidance to implementors of applications on choices they have to make when working with these time values to provide the basic functionality and security guarantees.
       </t>
     </abstract>
   </front>
@@ -100,12 +100,12 @@ RFC7384 SYSTEM
       <t>
         It is hard to understate the importance of time in modern digital systems. 
         The functionality and security of applications (distributed or local to one system) and that of network protocols generally hinge on some notion of time. 
-        For implementation, these applications and protocols have to choose one of the many types of time values available on their system, each of which has its own specific properties. 
-        However, currently these applications seem to be oblivious to the implications of choosing one or the other time value for implementation. 
-        This behaviour can be attributed to: 
+        For implementation, these applications and protocols have to choose one of the types of time values available on their system, each of which has its own specific properties. 
+        However, currently many of these applications seem to be oblivious to the implications of choosing one or the other time value for implementation. 
+        This behavior can be attributed to: 
           a) the lack of clear understanding of the distinct properties of these time values, 
           b) trade-offs of using one or the other for an application, and 
-          c) availability and compatibilty of these time values on different systems. 
+          c) availability and compatibility of these time values on different systems. 
         This document discusses a) and b). 
       </t>
       <t> 
@@ -118,11 +118,21 @@ RFC7384 SYSTEM
     </section>
 
     <section title = "Scope of the document">
+      <t>
+        This aims to provide software developers implementing protocols and
+        applications that have to deal with time with the knowledge and
+        understanding to make informed decisions regarding the available
+        time values and their respective trade-offs.
+      </t>
       <t> 
-        This document does not describe functionality that is specific to the architecture of a PC, or other devices such as phones, IoT devices, switches, routers, base stations, synchrophasors.  
-        Nor is the document applicable to a specific operating system. 
+        It does not describe functionality that is specific to the
+        architecture of a PC, or other devices such as phones, IoT devices,
+        switches, routers, base stations, or synchrophasors. Nor is the
+        document applicable to a specific operating system. 
         Throughout the document we assume that one or the other time value is available on most devices. 
         How these time values are available on different PCs or other devices is out of scope of this document. 
+      </t>
+      <t>
         We do not exactly recommend which time value should be used. 
         We discuss the available options and trade-offs. 
         The final decision would vary depending on the availability of the kind of time values and the security requirements of the specific application under implementation. 
@@ -132,8 +142,8 @@ RFC7384 SYSTEM
         Also, throughout the document, we define the terms as they become relevant. 
         Different systems, depending on their OS, may use different terms for the same time values. 
         A survey on this is not in the scope of this document. 
-        We leave it to implementors to find out how to access these time values or how these time values are available on the device or OS that they are working on that is suitable to the application that they are going to use this time for. 
-        We will provide an example in the end for Linux. 
+        We provide a discussion on how to access these values on POSIX and Windows systems.
+        On other systems, implementors will have to determine themselves which of these values are available.
       </t>
     </section>
 
@@ -155,20 +165,24 @@ RFC7384 SYSTEM
 
     <section title = "Expressing Time">
       <t> 
-        Protocols and applications can express time in several forms, depending on whether or not universal agreement is required about that point in time. 
+        Protocols and applications can express time in several forms, depending on whether or not universal agreement is required about a point in time. 
         This section focuses on the differences between absolute time and relative time.
       </t>
       <t>
         <list style = "symbols">
           <t>
+            <!-- mh:
+                 I really like the phrase "(universal) agreement about a point
+                 of time" for absolute time.
+            -->
             Absolute time expresses an absolute point in time (e.g., June 13, 2018 at 1:32:09pm). 
             For instance, Unix Time is seconds since midnight January 1st, 1970, while Universal Coordinated Time (UTC) is an international time scale that forms the basis for the coordinated dissemination of standard frequencies and time signals. 
-            Absolute time is often used to express the validity of objects with a limited lifetime that are shared over the network. 
+            Absolute time is often used to express the start or end of validity of objects with a limited lifetime that are shared over the network. 
             In order to validate absolute time value, a system needs access to a reasonably close reference time, for instance one based on the UTC. 
           </t>
           <t> 
             Relative time measures the time interval that has elapsed from some reference point (e.g., 20 minutes from the time of your query). 
-            Relative time is commonly used in network protocols, e.g., to determine when a packet should be considered dropped, or e.g., to set Time To Live (TTL) values that govern the length of time for which an object is valid or usable. 
+            Relative time is commonly used in network protocols, for instance to determine when a packet should be considered dropped or to express Time To Live (TTL) values that govern the length of time for which an object is valid or usable. 
             Relative time does not require access to the UTC time, or any other absolute time metric only the rate of passage of his time across different systems is important. 
           </t>
         </list>
@@ -177,13 +191,13 @@ RFC7384 SYSTEM
 
     <section title = "Keeping Time: Different Clocks">
       <t> 
-        Because time is relative to an observer, there cannot be a universally agreed upon time. 
+        Because time is relative to an observer, there cannot be a universally agreed upon time.
         At best we can achieve an approximation by updating our own observed time with a common reference time shared with other observers.
       </t>
-      <t> 
+      <t>
         As this reference time is what we naively assume clocks on a wall are showing, we shall call it the "wall time." 
       </t>
-      <t> An individual computer system's preception of time differs from this idealized wall time. 
+      <t> An individual computer system's perception of time differs from this idealized wall time. 
         Staying close to it requires some effort that comes with its own set of drawbacks. 
         Systems therefore provide access to different types of clocks with different properties. 
         <!--  Unfortunately, there is no standard terminology and definitions for these types. 
@@ -195,17 +209,17 @@ RFC7384 SYSTEM
         <list style = "symbols">
           <t> 
             Native Time: The relative time on a system is native time. 
-            At its most fundamental, a system has its own perception of time; its unmodified, native time. 
+            At its most fundamental, a system has its own perception of time.
             This time is typically measured by counting cycles of an oscillator but systems may also use process CPU times or thread CPU time (via timers from the CPU). 
             The quality of this time is therefore dependent on either the stability of the oscillator or of the CPU timer. 
-            Native time is purely subjective time - no general meaning can be attached to any specific value. 
-            One can only obtain the relative time by comparing two values. 
+            Native time is a purely subjective time scale -- no general meaning can be attached to any specific value. 
+            One can only obtain relative time by comparing two values. 
             Because native time is unaltered by any external or manual source, it is continuous and strictly monotonically increasing. 
-            Its value always grow at a steady pace, never decreases, never make unexpected jumps, and never skips. 
+            Its value always grows at a steady pace, never decreases, never make unexpected jumps, and never skips. 
             It is not subject to vulnerabilities or dependencies in external time sources. 
             However, even if highly accurate oscillators or CPU timers are used, native time is subject to clock drift. 
             Native time is not adjusted for the error introduced by clock drift. 
-            Thus the accuracy of this time is dependent on the clock drift which is further dependent on factors including oscilator quality, system load, or ambient temperature, etc.
+            Thus the accuracy of this time is dependent on the clock drift which is further dependent on factors including oscillator quality, system load, or ambient temperature, etc.
           </t>
           <t>
             World Time: The absolute time on a system is world time.
@@ -374,7 +388,7 @@ RFC7384 SYSTEM
       </t>
     </section>
     
-    <section anchor="ALTIMP" title = "Alternative Approaches">
+    <section anchor="ALTIMP" title = "Implementation Approaches">
       <t>
         For relative time, where we only need the rate of passage of time to be close enough to the rest of the world, one does not have to necessarily rely on world time to establish the start and end time for the reasons mentioned above.
       </t>
@@ -403,37 +417,50 @@ RFC7384 SYSTEM
          For instance in applications that can tolerate a certain amount of clock drift, implementers can use native time. 
          However, if that is an issue then one has no choice but to fall back to world time.
       </t>
+        <t>
+          Software employing the pattern organized around I/O event notification mechanisms, as described in previous section, should maintain two sorted lists of two different types of time stamps:
+          <list style="numbers">
+            <t>
+              One to register events based on time stamps expressed in wall clock time
+            </t>
+            <t>
+              One to register the start and end of time spans in (adjusted) raw time
+            </t>
+          </list>
+        </t>
+        <t>
+          To determine the timeout value for a call to select() or poll(), the program needs to get the current time in both real time and in (adjusted) raw time.
+          The current real time is substracted from the lowest value of the time stamps expressed in wall time list.
+          The current (adjusted) raw time from the lowest value of the time stamps expressed in (adjusted) raw time list.
+          The lowest of the values should be used as the timeout value for select() or poll() and determines which action should be performed when te function times out.
+        </t>
+        <t>
+          Alternatively a single list of (adjusted) raw time could be used for both time stamps and time spans.
+          In that case time stamps expressed in wall clock time should be converted into (adjusted) raw time, by first converting it into a time span by substracting real time from it, and then adding the current time in (adjested) raw time.
+        </t>
+
     </section>
 
-    <section title = "POSIX example">
-      <t>
-        POSIX defines a system C API function which may provide native time: 
-        clock_gettime(), when used with a clock_id of CLOCK_MONOTONIC (when supported by the system). 
-        POSIX does not make a distinction between raw time and adjusted raw time in the definition of this function. 
-        Beware that, with some systems, CLOCK_MONOTONIC deliveres adjusted raw time and that CLOCK_MONOTONIC_RAW needs to be used as clock_id to get unadjusted raw time. 
-        Non-POSIX systems may provide different APIs
-      </t>
-      <t>
-        Software employing the pattern organized around I/O event notification mechanisms, as described in previous section, should maintain two sorted lists of two different types of time stamps:
-        <list style="numbers">
-          <t>
-            One to register events based on time stamps expressed in wall clock time
-          </t>
-          <t>
-            One to register the start and end of time spans in (adjusted) raw time
-          </t>
-        </list>
-      </t>
-      <t>
-        To determine the timeout value for a call to select() or poll(), the program needs to get the current time in both real time and in (adjusted) raw time.
-        The current real time is substracted from the lowest value of the time stamps expressed in wall time list.
-        The current (adjusted) raw time from the lowest value of the time stamps expressed in (adjusted) raw time list.
-        The lowest of the values should be used as the timeout value for select() or poll() and determines which action should be performed when te function times out.
-      </t>
-      <t>
-        Alternatively a single list of (adjusted) raw time could be used for both time stamps and time spans.
-        In that case time stamps expressed in wall clock time should be converted into (adjusted) raw time, by first converting it into a time span by substracting real time from it, and then adding the current time in (adjested) raw time.
-      </t>
+    <section title = "Accessing Native Time on Selected Operating Systems">
+      <section title="POSIX">
+        <t>
+          POSIX defines a system C API function which may provide native time: 
+          clock_gettime(), when used with a clock_id of CLOCK_MONOTONIC (when supported by the system). 
+          POSIX does not make a distinction between raw time and adjusted raw time in the definition of this function. 
+          Beware that, with some systems, CLOCK_MONOTONIC deliveres adjusted raw time and that CLOCK_MONOTONIC_RAW needs to be used as clock_id to get unadjusted raw time. 
+          Non-POSIX systems may provide different APIs
+        </t>
+      </section>
+      <section title="Microsoft Windows">
+        <t>
+          In the Microsoft Windows operating system, native time is called 'Windows
+          Time' and can be accessed through the GetTickCount and GetTickCount64
+          API functions. The returned value is nomially the number of milliseconds
+          since system start. GetTickCount will return a 32 bit value while
+          GetTickCount64 returns a value 64 bits wide that will wrap around less
+          often.
+        </t>
+      </section>
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">

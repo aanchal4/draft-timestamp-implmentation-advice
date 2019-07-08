@@ -92,7 +92,7 @@ and security guarantees.
 <middle>
 
 <section anchor="introduction" title="Introduction">
-<t>It is hard to understate the importance of time in modern digital systems.  The
+<t>It is hard to overstate the importance of time in modern digital systems.  The
 functionality and security of applications (distributed or local to one system)
 and that of network protocols generally hinge on some notion of time.  For
 implementation, these applications and protocols have to choose one of the
@@ -100,10 +100,15 @@ types of clocks available on their system, each of which has its own specific
 properties.  However, currently many of these applications seem to be oblivious
 to the implications of choosing one or the other clock for implementation.
 This behavior can be attributed to:
-  a. the lack of clear understanding of the distinct properties of these clocks,
-  b. trade-offs of using one or the other for an application, and
-  c. availability and compatibility of these clocks on
-different systems.  This document discusses a) and b).
+</t>
+<t>
+<list style="letters">
+<t>the lack of clear understanding of the distinct properties of these clocks,</t>
+<t>trade-offs of using one or the other for an application, and</t>
+<t>availability and compatibility of these clocks on different systems.</t>
+</list>
+</t>
+<t>This document discusses a) and b).
 </t>
 <t>More specifically, in this document we first define different methods used by
 protocols and applications to express time.  We then define properties of
@@ -241,14 +246,21 @@ others.</t>
 <t>Accessing the hardware clock requires an I/O operation which is
 resource intensive, therefore many systems use the hardware clock
 only upon reboot, to initialize the clock offset; subsequent updates
-are made either manually or through timing protocols.
-Further, on many systems the quality of the hardware clock isn't very
-high, leading to a large clock drift if solely relying on it.  Worse,
-systems like microcontrollers that operate within embedded systems
-(e.g., Raspberry Pi, Arduino, etc.) often lack hardware clocks
-altogether.  These systems rely on external time sources upon reboot
-and have no means to process absolute time until synchronization with
-these sources has completed.</t>
+are made either manually or through timing protocols.</t>
+</list>
+</t>
+<t><list style="empty">
+<t>Further, on many systems the quality of the hardware clock isn't very
+    high, leading to a large clock drift if solely relying on it.  Worse,
+    systems like microcontrollers that operate within embedded systems
+    (e.g., Raspberry Pi, Arduino, etc.) often lack hardware clocks
+    altogether.  These systems rely on external time sources upon reboot
+    and have no means to process absolute time until synchronization with
+    these sources has completed.
+</t>
+</list></t>
+<t>
+<list style="symbols">
 <t>Relying on Internet timing protocols opens up the system time to
 attack.  Recent papers show vulnerabilities in NTP <xref target="ANTP"/><xref target="ANABM"/><xref target="SECNTP"/>
 and SNTP <xref target="BPHSTS"/> that allow attackers to maliciously alter system's world

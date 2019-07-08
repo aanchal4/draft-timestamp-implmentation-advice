@@ -78,7 +78,7 @@ and security guarantees.
 
 # Introduction
 
-It is hard to understate the importance of time in modern digital systems.  The
+It is hard to overstate the importance of time in modern digital systems.  The
 functionality and security of applications (distributed or local to one system)
 and that of network protocols generally hinge on some notion of time.  For
 implementation, these applications and protocols have to choose one of the
@@ -86,10 +86,13 @@ types of clocks available on their system, each of which has its own specific
 properties.  However, currently many of these applications seem to be oblivious
 to the implications of choosing one or the other clock for implementation.
 This behavior can be attributed to:
-  a. the lack of clear understanding of the distinct properties of these clocks,
-  b. trade-offs of using one or the other for an application, and
-  c. availability and compatibility of these clocks on
-different systems.  This document discusses a) and b).
+
+{style="letters"}
+  - the lack of clear understanding of the distinct properties of these clocks,
+  - trade-offs of using one or the other for an application, and
+  - availability and compatibility of these clocks on different systems.
+
+This document discusses a) and b).
 
 More specifically, in this document we first define different methods used by
 protocols and applications to express time.  We then define properties of
@@ -221,7 +224,7 @@ Each of these approaches has own problems attached to it.
     only upon reboot, to initialize the clock offset; subsequent updates
     are made either manually or through timing protocols.
 
-    Further, on many systems the quality of the hardware clock isn't very
+  > Further, on many systems the quality of the hardware clock isn't very
     high, leading to a large clock drift if solely relying on it.  Worse,
     systems like microcontrollers that operate within embedded systems
     (e.g., Raspberry Pi, Arduino, etc.) often lack hardware clocks

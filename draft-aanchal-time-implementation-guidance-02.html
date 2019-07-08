@@ -512,8 +512,18 @@
   <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">It is hard to understate the importance of time in modern digital systems.  The functionality and security of applications (distributed or local to one system) and that of network protocols generally hinge on some notion of time.  For implementation, these applications and protocols have to choose one of the types of clocks available on their system, each of which has its own specific properties.  However, currently many of these applications seem to be oblivious to the implications of choosing one or the other clock for implementation.  This behavior can be attributed to: a. the lack of clear understanding of the distinct properties of these clocks, b. trade-offs of using one or the other for an application, and c. availability and compatibility of these clocks on different systems.  This document discusses a) and b).  </p>
-<p id="rfc.section.1.p.2">More specifically, in this document we first define different methods used by protocols and applications to express time.  We then define properties of clocks maintained by modern digital systems.  Next we describe how systems obtain these values from these clocks and the security considerations of using these values to implement protocols and applications that use time.  Finally we discuss trade-offs between security and precision of choosing a clock.  The document aims to provide guidance to the implementors make an informed choice with an example of POSIX system.  </p>
+<p id="rfc.section.1.p.1">It is hard to overstate the importance of time in modern digital systems.  The functionality and security of applications (distributed or local to one system) and that of network protocols generally hinge on some notion of time.  For implementation, these applications and protocols have to choose one of the types of clocks available on their system, each of which has its own specific properties.  However, currently many of these applications seem to be oblivious to the implications of choosing one or the other clock for implementation.  This behavior can be attributed to: </p>
+<p></p>
+
+<ol style="list-style-type: lower-alpha">
+<li>the lack of clear understanding of the distinct properties of these clocks,</li>
+<li>trade-offs of using one or the other for an application, and</li>
+<li>availability and compatibility of these clocks on different systems.</li>
+</ol>
+
+<p> </p>
+<p id="rfc.section.1.p.3">This document discusses a) and b).  </p>
+<p id="rfc.section.1.p.4">More specifically, in this document we first define different methods used by protocols and applications to express time.  We then define properties of clocks maintained by modern digital systems.  Next we describe how systems obtain these values from these clocks and the security considerations of using these values to implement protocols and applications that use time.  Finally we discuss trade-offs between security and precision of choosing a clock.  The document aims to provide guidance to the implementors make an informed choice with an example of POSIX system.  </p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#scope-of-the-document" id="scope-of-the-document">Scope of the document</a>
 </h1>
@@ -567,12 +577,19 @@
 
 <ul>
 <li>Manual configurations can be subject to errors and misconfiguration.</li>
-<li>Accessing the hardware clock requires an I/O operation which is resource intensive, therefore many systems use the hardware clock only upon reboot, to initialize the clock offset; subsequent updates are made either manually or through timing protocols.  Further, on many systems the quality of the hardware clock isn't very high, leading to a large clock drift if solely relying on it.  Worse, systems like microcontrollers that operate within embedded systems (e.g., Raspberry Pi, Arduino, etc.) often lack hardware clocks altogether.  These systems rely on external time sources upon reboot and have no means to process absolute time until synchronization with these sources has completed.</li>
-<li>Relying on Internet timing protocols opens up the system time to attack.  Recent papers show vulnerabilities in NTP <a href="#ANTP" class="xref">[ANTP]</a><a href="#ANABM" class="xref">[ANABM]</a><a href="#SECNTP" class="xref">[SECNTP]</a> and SNTP <a href="#BPHSTS" class="xref">[BPHSTS]</a> that allow attackers to maliciously alter system's world clock -- pushing it into the past or even into the future.  Moreover, many of these time-shifting attacks can be performed by off-path attackers, who do not occupy a privileged position on the network between the victim system and its time sources on the Internet.  Researchers have also demonstrated off-path denial of service attacks on timing protocols that prevent systems from synchronizing their clocks.</li>
+<li>Accessing the hardware clock requires an I/O operation which is resource intensive, therefore many systems use the hardware clock only upon reboot, to initialize the clock offset; subsequent updates are made either manually or through timing protocols.</li>
 </ul>
 
 <p> </p>
-<p id="rfc.section.4.2.p.6">In other words, the process of obtaining the offset necessary to provide a world clock creates dependencies that can be exploited.  </p>
+<p></p>
+
+<ul class="empty"><li>Further, on many systems the quality of the hardware clock isn't very high, leading to a large clock drift if solely relying on it.  Worse, systems like microcontrollers that operate within embedded systems (e.g., Raspberry Pi, Arduino, etc.) often lack hardware clocks altogether.  These systems rely on external time sources upon reboot and have no means to process absolute time until synchronization with these sources has completed.  </li></ul>
+<p></p>
+
+<ul><li>Relying on Internet timing protocols opens up the system time to attack.  Recent papers show vulnerabilities in NTP <a href="#ANTP" class="xref">[ANTP]</a><a href="#ANABM" class="xref">[ANABM]</a><a href="#SECNTP" class="xref">[SECNTP]</a> and SNTP <a href="#BPHSTS" class="xref">[BPHSTS]</a> that allow attackers to maliciously alter system's world clock -- pushing it into the past or even into the future.  Moreover, many of these time-shifting attacks can be performed by off-path attackers, who do not occupy a privileged position on the network between the victim system and its time sources on the Internet.  Researchers have also demonstrated off-path denial of service attacks on timing protocols that prevent systems from synchronizing their clocks.</li></ul>
+
+<p> </p>
+<p id="rfc.section.4.2.p.8">In other words, the process of obtaining the offset necessary to provide a world clock creates dependencies that can be exploited.  </p>
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> <a href="#implementation-approaches" id="implementation-approaches">Implementation Approaches</a>
 </h1>

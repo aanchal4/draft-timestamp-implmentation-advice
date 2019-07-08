@@ -67,7 +67,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Scope of the document . . . . . . . . . . . . . . . . . . . .   3
    3.  Expressing Time . . . . . . . . . . . . . . . . . . . . . . .   3
-     3.1.  Absolute Time . . . . . . . . . . . . . . . . . . . . . .   3
+     3.1.  Absolute Time . . . . . . . . . . . . . . . . . . . . . .   4
      3.2.  Relative Time . . . . . . . . . . . . . . . . . . . . . .   4
    4.  Keeping Time: Different Clocks  . . . . . . . . . . . . . . .   4
      4.1.  Native Clock  . . . . . . . . . . . . . . . . . . . . . .   4
@@ -78,15 +78,15 @@ Table of Contents
      6.2.  Microsoft Window  . . . . . . . . . . . . . . . . . . . .   7
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
      9.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .   8
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
-   It is hard to understate the importance of time in modern digital
+   It is hard to overstate the importance of time in modern digital
    systems.  The functionality and security of applications (distributed
    or local to one system) and that of network protocols generally hinge
    on some notion of time.  For implementation, these applications and
@@ -94,18 +94,18 @@ Table of Contents
    their system, each of which has its own specific properties.
    However, currently many of these applications seem to be oblivious to
    the implications of choosing one or the other clock for
-   implementation.  This behavior can be attributed to: a. the lack of
-   clear understanding of the distinct properties of these clocks, b.
-   trade-offs of using one or the other for an application, and c.
-   availability and compatibility of these clocks on different systems.
+   implementation.  This behavior can be attributed to:
+
+   a.  the lack of clear understanding of the distinct properties of
+       these clocks,
+
+   b.  trade-offs of using one or the other for an application, and
+
+   c.  availability and compatibility of these clocks on different
+       systems.
+
    This document discusses a) and b).
 
-   More specifically, in this document we first define different methods
-   used by protocols and applications to express time.  We then define
-   properties of clocks maintained by modern digital systems.  Next we
-   describe how systems obtain these values from these clocks and the
-   security considerations of using these values to implement protocols
-   and applications that use time.  Finally we discuss trade-offs
 
 
 
@@ -114,6 +114,12 @@ Malhotra, et al.         Expires January 9, 2020                [Page 2]
 Internet-Draft            implementation-advice                July 2019
 
 
+   More specifically, in this document we first define different methods
+   used by protocols and applications to express time.  We then define
+   properties of clocks maintained by modern digital systems.  Next we
+   describe how systems obtain these values from these clocks and the
+   security considerations of using these values to implement protocols
+   and applications that use time.  Finally we discuss trade-offs
    between security and precision of choosing a clock.  The document
    aims to provide guidance to the implementors make an informed choice
    with an example of POSIX system.
@@ -153,13 +159,7 @@ Internet-Draft            implementation-advice                July 2019
    depending on whether they need to express a point in time or a time
    interval.
 
-3.1.  Absolute Time
 
-   Absolute time expresses a universally agreed upon reference to a
-   specific point in time.  Such a reference can be expressed in
-   different ways.  For instance, Unix Time refers to the number of
-   seconds since midnight UTC, January 1st, 1970, while in everyday
-   life, we referenced such a point through year, month, day, and so on.
 
 
 
@@ -169,6 +169,14 @@ Malhotra, et al.         Expires January 9, 2020                [Page 3]
 
 Internet-Draft            implementation-advice                July 2019
 
+
+3.1.  Absolute Time
+
+   Absolute time expresses a universally agreed upon reference to a
+   specific point in time.  Such a reference can be expressed in
+   different ways.  For instance, Unix Time refers to the number of
+   seconds since midnight UTC, January 1st, 1970, while in everyday
+   life, we referenced such a point through year, month, day, and so on.
 
    Because absolute time expresses a shared view of time, a system needs
    to synchronize its clock with a common reference clock, for instance
@@ -210,14 +218,6 @@ Internet-Draft            implementation-advice                July 2019
    The timescale of the native clock is a purely subjective -- no
    general meaning can be attached to any specific clock value.  One can
    only obtain relative time by comparing two values.  Because the value
-   of the native clock always grows at a steady pace, never decreases,
-   never make unexpected jumps, and never skips, the difference between
-   two clock values provides the time intervall between the two
-   measurements.
-
-   The independence of the native clock from any external time sources
-   renders it resistant to any manipulation but in return there is no
-   guarantee that its clock rate is similar to that of any other system.
 
 
 
@@ -226,6 +226,14 @@ Malhotra, et al.         Expires January 9, 2020                [Page 4]
 Internet-Draft            implementation-advice                July 2019
 
 
+   of the native clock always grows at a steady pace, never decreases,
+   never make unexpected jumps, and never skips, the difference between
+   two clock values provides the time intervall between the two
+   measurements.
+
+   The independence of the native clock from any external time sources
+   renders it resistant to any manipulation but in return there is no
+   guarantee that its clock rate is similar to that of any other system.
    This difference in rate, especially when compared to a reference
    clock, is called clock drift.
 
@@ -265,15 +273,7 @@ Internet-Draft            implementation-advice                July 2019
 
    o  Accessing the hardware clock requires an I/O operation which is
       resource intensive, therefore many systems use the hardware clock
-      only upon reboot, to initialize the clock offset; subsequent
-      updates are made either manually or through timing protocols.
-      Further, on many systems the quality of the hardware clock isn't
-      very high, leading to a large clock drift if solely relying on it.
-      Worse, systems like microcontrollers that operate within embedded
-      systems (e.g., Raspberry Pi, Arduino, etc.) often lack hardware
-      clocks altogether.  These systems rely on external time sources
-      upon reboot and have no means to process absolute time until
-      synchronization with these sources has completed.
+
 
 
 
@@ -281,6 +281,17 @@ Malhotra, et al.         Expires January 9, 2020                [Page 5]
 
 Internet-Draft            implementation-advice                July 2019
 
+
+      only upon reboot, to initialize the clock offset; subsequent
+      updates are made either manually or through timing protocols.
+
+      Further, on many systems the quality of the hardware clock isn't
+      very high, leading to a large clock drift if solely relying on it.
+      Worse, systems like microcontrollers that operate within embedded
+      systems (e.g., Raspberry Pi, Arduino, etc.) often lack hardware
+      clocks altogether.  These systems rely on external time sources
+      upon reboot and have no means to process absolute time until
+      synchronization with these sources has completed.
 
    o  Relying on Internet timing protocols opens up the system time to
       attack.  Recent papers show vulnerabilities in NTP
@@ -320,23 +331,18 @@ Internet-Draft            implementation-advice                July 2019
    intervals, it may become significant for intervals that span long
    periods of time.
 
-   The choice of clock to be used is situation-specific.  If a certain
-   amount of clock drift can be tolerated or if time intervals are
-   short, implementors may prefer to use the native clock.  However, if
-   precise timing over long periods is required, then the implementors
-   have no choice but to fall back to world clock
-
-
-
-
-
-
 
 
 Malhotra, et al.         Expires January 9, 2020                [Page 6]
 
 Internet-Draft            implementation-advice                July 2019
 
+
+   The choice of clock to be used is situation-specific.  If a certain
+   amount of clock drift can be tolerated or if time intervals are
+   short, implementors may prefer to use the native clock.  However, if
+   precise timing over long periods is required, then the implementors
+   have no choice but to fall back to world clock
 
 6.  Accessing the Native Clock on Selected Operating Systems
 
@@ -379,13 +385,7 @@ Internet-Draft            implementation-advice                July 2019
    considerations with respect to implementing time values in
    applications in various sections.
 
-9.  References
 
-9.1.  Normative References
-
-   [RFC7384]  Mizrahi, T., "Security Requirements of Time Protocols in
-              Packet Switched Networks", RFC 7384, DOI 10.17487/RFC7384,
-              October 2014, <https://www.rfc-editor.org/info/rfc7384>.
 
 
 
@@ -393,6 +393,14 @@ Malhotra, et al.         Expires January 9, 2020                [Page 7]
 
 Internet-Draft            implementation-advice                July 2019
 
+
+9.  References
+
+9.1.  Normative References
+
+   [RFC7384]  Mizrahi, T., "Security Requirements of Time Protocols in
+              Packet Switched Networks", RFC 7384, DOI 10.17487/RFC7384,
+              October 2014, <https://www.rfc-editor.org/info/rfc7384>.
 
 9.2.  Informative References
 
@@ -429,14 +437,6 @@ Authors' Addresses
    Email: aanchal4@bu.edu
 
 
-   Kristof Teichel
-   Physikalisch-Technische Bundesanstalt
-   Bundesallee 100
-   Braunschweig  D-38116
-   Germany
-
-   Email: kristof.teichel@ptb.de
-
 
 
 
@@ -448,6 +448,15 @@ Authors' Addresses
 Malhotra, et al.         Expires January 9, 2020                [Page 8]
 
 Internet-Draft            implementation-advice                July 2019
+
+
+   Kristof Teichel
+   Physikalisch-Technische Bundesanstalt
+   Bundesallee 100
+   Braunschweig  D-38116
+   Germany
+
+   Email: kristof.teichel@ptb.de
 
 
    Martin Hoffmann
@@ -466,15 +475,6 @@ Internet-Draft            implementation-advice                July 2019
    Netherlands
 
    Email: willem@nlnetlabs.nl
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,0 +1,734 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>On Implementing Time</title>
+
+  <style type="text/css" title="Xml2Rfc (sans serif)">
+  /*<![CDATA[*/
+	  a {
+	  text-decoration: none;
+	  }
+      /* info code from SantaKlauss at http://www.madaboutstyle.com/tooltip2.html */
+      a.info {
+          /* This is the key. */
+          position: relative;
+          z-index: 24;
+          text-decoration: none;
+      }
+      a.info:hover {
+          z-index: 25;
+          color: #FFF; background-color: #900;
+      }
+      a.info span { display: none; }
+      a.info:hover span.info {
+          /* The span will display just on :hover state. */
+          display: block;
+          position: absolute;
+          font-size: smaller;
+          top: 2em; left: -5em; width: 15em;
+          padding: 2px; border: 1px solid #333;
+          color: #900; background-color: #EEE;
+          text-align: left;
+      }
+	  a.smpl {
+	  color: black;
+	  }
+	  a:hover {
+	  text-decoration: underline;
+	  }
+	  a:active {
+	  text-decoration: underline;
+	  }
+	  address {
+	  margin-top: 1em;
+	  margin-left: 2em;
+	  font-style: normal;
+	  }
+	  body {
+	  color: black;
+	  font-family: verdana, helvetica, arial, sans-serif;
+	  font-size: 10pt;
+	  max-width: 55em;
+	  
+	  }
+	  cite {
+	  font-style: normal;
+	  }
+	  dd {
+	  margin-right: 2em;
+	  }
+	  dl {
+	  margin-left: 2em;
+	  }
+	
+	  ul.empty {
+	  list-style-type: none;
+	  }
+	  ul.empty li {
+	  margin-top: .5em;
+	  }
+	  dl p {
+	  margin-left: 0em;
+	  }
+	  dt {
+	  margin-top: .5em;
+	  }
+	  h1 {
+	  font-size: 14pt;
+	  line-height: 21pt;
+	  page-break-after: avoid;
+	  }
+	  h1.np {
+	  page-break-before: always;
+	  }
+	  h1 a {
+	  color: #333333;
+	  }
+	  h2 {
+	  font-size: 12pt;
+	  line-height: 15pt;
+	  page-break-after: avoid;
+	  }
+	  h3, h4, h5, h6 {
+	  font-size: 10pt;
+	  page-break-after: avoid;
+	  }
+	  h2 a, h3 a, h4 a, h5 a, h6 a {
+	  color: black;
+	  }
+	  img {
+	  margin-left: 3em;
+	  }
+	  li {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol p {
+	  margin-left: 0em;
+	  }
+	  p {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  pre {
+	  margin-left: 3em;
+	  background-color: lightyellow;
+	  padding: .25em;
+	  }
+	  pre.text2 {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f0f0f0;
+	  width: 69em;
+	  }
+	  pre.inline {
+	  background-color: white;
+	  padding: 0em;
+	  }
+	  pre.text {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  width: 69em;
+	  }
+	  pre.drawing {
+	  border-style: solid;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  padding: 2em;
+	  }
+	  table {
+	  margin-left: 2em;
+	  }
+	  table.tt {
+	  vertical-align: top;
+	  }
+	  table.full {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.headers {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.tt td {
+	  vertical-align: top;
+	  }
+	  table.full td {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.tt th {
+	  vertical-align: top;
+	  }
+	  table.full th {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.headers th {
+	  border-style: none none inset none;
+	  border-width: 1px;
+	  }
+	  table.left {
+	  margin-right: auto;
+	  }
+	  table.right {
+	  margin-left: auto;
+	  }
+	  table.center {
+	  margin-left: auto;
+	  margin-right: auto;
+	  }
+	  caption {
+	  caption-side: bottom;
+	  font-weight: bold;
+	  font-size: 9pt;
+	  margin-top: .5em;
+	  }
+	
+	  table.header {
+	  border-spacing: 1px;
+	  width: 95%;
+	  font-size: 10pt;
+	  color: white;
+	  }
+	  td.top {
+	  vertical-align: top;
+	  }
+	  td.topnowrap {
+	  vertical-align: top;
+	  white-space: nowrap; 
+	  }
+	  table.header td {
+	  background-color: gray;
+	  width: 50%;
+	  }
+	  table.header a {
+	  color: white;
+	  }
+	  td.reference {
+	  vertical-align: top;
+	  white-space: nowrap;
+	  padding-right: 1em;
+	  }
+	  thead {
+	  display:table-header-group;
+	  }
+	  ul.toc, ul.toc ul {
+	  list-style: none;
+	  margin-left: 1.5em;
+	  margin-right: 0em;
+	  padding-left: 0em;
+	  }
+	  ul.toc li {
+	  line-height: 150%;
+	  font-weight: bold;
+	  font-size: 10pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  ul.toc li li {
+	  line-height: normal;
+	  font-weight: normal;
+	  font-size: 9pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  li.excluded {
+	  font-size: 0pt;
+	  }
+	  ul p {
+	  margin-left: 0em;
+	  }
+	
+	  .comment {
+	  background-color: yellow;
+	  }
+	  .center {
+	  text-align: center;
+	  }
+	  .error {
+	  color: red;
+	  font-style: italic;
+	  font-weight: bold;
+	  }
+	  .figure {
+	  font-weight: bold;
+	  text-align: center;
+	  font-size: 9pt;
+	  }
+	  .filename {
+	  color: #333333;
+	  font-weight: bold;
+	  font-size: 12pt;
+	  line-height: 21pt;
+	  text-align: center;
+	  }
+	  .fn {
+	  font-weight: bold;
+	  }
+	  .hidden {
+	  display: none;
+	  }
+	  .left {
+	  text-align: left;
+	  }
+	  .right {
+	  text-align: right;
+	  }
+	  .title {
+	  color: #990000;
+	  font-size: 18pt;
+	  line-height: 18pt;
+	  font-weight: bold;
+	  text-align: center;
+	  margin-top: 36pt;
+	  }
+	  .vcardline {
+	  display: block;
+	  }
+	  .warning {
+	  font-size: 14pt;
+	  background-color: yellow;
+	  }
+	
+	
+	  @media print {
+	  .noprint {
+		display: none;
+	  }
+	
+	  a {
+		color: black;
+		text-decoration: none;
+	  }
+	
+	  table.header {
+		width: 90%;
+	  }
+	
+	  td.header {
+		width: 50%;
+		color: black;
+		background-color: white;
+		vertical-align: top;
+		font-size: 12pt;
+	  }
+	
+	  ul.toc a::after {
+		content: leader('.') target-counter(attr(href), page);
+	  }
+	
+	  ul.ind li li a {
+		content: target-counter(attr(href), page);
+	  }
+	
+	  .print2col {
+		column-count: 2;
+		-moz-column-count: 2;
+		column-fill: auto;
+	  }
+	  }
+	
+	  @page {
+	  @top-left {
+		   content: "Internet-Draft"; 
+	  } 
+	  @top-right {
+		   content: "December 2010"; 
+	  } 
+	  @top-center {
+		   content: "Abbreviated Title";
+	  } 
+	  @bottom-left {
+		   content: "Doe"; 
+	  } 
+	  @bottom-center {
+		   content: "Expires June 2011"; 
+	  } 
+	  @bottom-right {
+		   content: "[Page " counter(page) "]"; 
+	  } 
+	  }
+	
+	  @page:first { 
+		@top-left {
+		  content: normal;
+		}
+		@top-right {
+		  content: normal;
+		}
+		@top-center {
+		  content: normal;
+		}
+	  }
+  /*]]>*/
+  </style>
+
+  <link href="#rfc.toc" rel="Contents">
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
+<link href="#rfc.section.2" rel="Chapter" title="2 Scope of the document">
+<link href="#rfc.section.3" rel="Chapter" title="3 Expressing Time">
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 Absolute Time">
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 Relative Time">
+<link href="#rfc.section.4" rel="Chapter" title="4 Keeping Time: Different Clocks">
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 Native Clock">
+<link href="#rfc.section.4.2" rel="Chapter" title="4.2 World Clock">
+<link href="#rfc.section.5" rel="Chapter" title="5 Implementation Approaches">
+<link href="#rfc.section.6" rel="Chapter" title="6 Accessing the Native Clock on Selected Operating Systems">
+<link href="#rfc.section.6.1" rel="Chapter" title="6.1 POSIX">
+<link href="#rfc.section.6.2" rel="Chapter" title="6.2 Microsoft Window">
+<link href="#rfc.section.7" rel="Chapter" title="7 IANA Considerations">
+<link href="#rfc.section.8" rel="Chapter" title="8 Security Considerations">
+<link href="#rfc.references" rel="Chapter" title="9 References">
+<link href="#rfc.references.1" rel="Chapter" title="9.1 Normative References">
+<link href="#rfc.references.2" rel="Chapter" title="9.2 Informative References">
+<link href="#rfc.appendix.A" rel="Chapter" title="A Acknowledgements">
+<link href="#rfc.authors" rel="Chapter">
+
+
+  <meta name="generator" content="xml2rfc version 2.15.5 - https://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Malhotra, A., Teichel, K., Hoffmann, M., and W. Toorop" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-aanchal-time-implementation-guidance-02" />
+  <meta name="dct.issued" scheme="ISO8601" content="2019-07-08" />
+  <meta name="dct.abstract" content="This document describes the properties of different types of clocks available on digital systems. It provides implementors of applications with guidance on choices they have to make when working with time to provide basic functionality and security guarantees.  " />
+  <meta name="description" content="This document describes the properties of different types of clocks available on digital systems. It provides implementors of applications with guidance on choices they have to make when working with time to provide basic functionality and security guarantees.  " />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+<td class="left">NTP Working Group</td>
+<td class="right">A. Malhotra</td>
+</tr>
+<tr>
+<td class="left">Internet-Draft</td>
+<td class="right">Boston University</td>
+</tr>
+<tr>
+<td class="left">Intended status: Informational</td>
+<td class="right">K. Teichel</td>
+</tr>
+<tr>
+<td class="left">Expires: January 9, 2020</td>
+<td class="right">PTB</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">M. Hoffmann</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">W. Toorop</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">NLnet Labs</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">July 8, 2019</td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">On Implementing Time<br />
+  <span class="filename">draft-aanchal-time-implementation-guidance-02</span></p>
+  
+  <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
+<p>This document describes the properties of different types of clocks available on digital systems. It provides implementors of applications with guidance on choices they have to make when working with time to provide basic functionality and security guarantees.  </p>
+<h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on January 9, 2020.</p>
+<h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
+<p>Copyright (c) 2019 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a>
+</li>
+<li>2.   <a href="#rfc.section.2">Scope of the document</a>
+</li>
+<li>3.   <a href="#rfc.section.3">Expressing Time</a>
+</li>
+<ul><li>3.1.   <a href="#rfc.section.3.1">Absolute Time</a>
+</li>
+<li>3.2.   <a href="#rfc.section.3.2">Relative Time</a>
+</li>
+</ul><li>4.   <a href="#rfc.section.4">Keeping Time: Different Clocks</a>
+</li>
+<ul><li>4.1.   <a href="#rfc.section.4.1">Native Clock</a>
+</li>
+<li>4.2.   <a href="#rfc.section.4.2">World Clock</a>
+</li>
+</ul><li>5.   <a href="#rfc.section.5">Implementation Approaches</a>
+</li>
+<li>6.   <a href="#rfc.section.6">Accessing the Native Clock on Selected Operating Systems</a>
+</li>
+<ul><li>6.1.   <a href="#rfc.section.6.1">POSIX</a>
+</li>
+<li>6.2.   <a href="#rfc.section.6.2">Microsoft Window</a>
+</li>
+</ul><li>7.   <a href="#rfc.section.7">IANA Considerations</a>
+</li>
+<li>8.   <a href="#rfc.section.8">Security Considerations</a>
+</li>
+<li>9.   <a href="#rfc.references">References</a>
+</li>
+<ul><li>9.1.   <a href="#rfc.references.1">Normative References</a>
+</li>
+<li>9.2.   <a href="#rfc.references.2">Informative References</a>
+</li>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">Acknowledgements</a>
+</li>
+<li><a href="#rfc.authors">Authors' Addresses</a>
+</li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1">
+<a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
+</h1>
+<p id="rfc.section.1.p.1">It is hard to understate the importance of time in modern digital systems.  The functionality and security of applications (distributed or local to one system) and that of network protocols generally hinge on some notion of time.  For implementation, these applications and protocols have to choose one of the types of clocks available on their system, each of which has its own specific properties.  However, currently many of these applications seem to be oblivious to the implications of choosing one or the other clock for implementation.  This behavior can be attributed to: a. the lack of clear understanding of the distinct properties of these clocks, b. trade-offs of using one or the other for an application, and c. availability and compatibility of these clocks on different systems.  This document discusses a) and b).  </p>
+<p id="rfc.section.1.p.2">More specifically, in this document we first define different methods used by protocols and applications to express time.  We then define properties of clocks maintained by modern digital systems.  Next we describe how systems obtain these values from these clocks and the security considerations of using these values to implement protocols and applications that use time.  Finally we discuss trade-offs between security and precision of choosing a clock.  The document aims to provide guidance to the implementors make an informed choice with an example of POSIX system.  </p>
+<h1 id="rfc.section.2">
+<a href="#rfc.section.2">2.</a> <a href="#scope-of-the-document" id="scope-of-the-document">Scope of the document</a>
+</h1>
+<p id="rfc.section.2.p.1">This document aims to provide software developers implementing protocols and applications that have to deal with time with the knowledge and understanding to make informed decisions regarding the available clocks and their respective trade-offs.  </p>
+<p id="rfc.section.2.p.2">It does not describe functionality that is specific to the architecture of a PC, or other devices such as phones, IoT devices, switches, routers, base stations, or synchrophasors. Nor is the document applicable to a specific operating system.  Throughout the document we assume that one or the other clock is available on most devices.  How these clocks are available on different PCs or other devices is out of scope of this document.  </p>
+<p id="rfc.section.2.p.3">We do not exactly recommend which clock should be used.  We discuss the available options and trade-offs.  The final decision would vary depending on the availability of clocks and the security requirements of the specific application under implementation.  </p>
+<p id="rfc.section.2.p.4">Note: Since there is a lack of standards on terminology related to time, we define some terms in the following section.  Also, throughout the document, we define the terms as they become relevant.  Different systems, depending on their OS, may use different terms for the same types of clocks.  A survey on this is not in the scope of this document.  We provide a discussion on how to access these values on POSIX and Windows systems.  On other systems, implementors will have to determine themselves which of these values are available.  </p>
+<h1 id="rfc.section.3">
+<a href="#rfc.section.3">3.</a> <a href="#expressing-time" id="expressing-time">Expressing Time</a>
+</h1>
+<p id="rfc.section.3.p.1">Protocols and applications can express time in several forms, depending on whether they need to express a point in time or a time interval.  </p>
+<h1 id="rfc.section.3.1">
+<a href="#rfc.section.3.1">3.1.</a> <a href="#absolute-time" id="absolute-time">Absolute Time</a>
+</h1>
+<p id="rfc.section.3.1.p.1">Absolute time expresses a universally agreed upon reference to a specific point in time.  Such a reference can be expressed in different ways.  For instance, Unix Time refers to the number of seconds since midnight UTC, January 1st, 1970, while in everyday life, we referenced such a point through year, month, day, and so on.  </p>
+<p id="rfc.section.3.1.p.2">Because absolute time expresses a shared view of time, a system needs to synchronize its clock with a common reference clock, for instance one base on UTC.  </p>
+<p id="rfc.section.3.1.p.3">Absolute time is often used to express the start or end of the validity of objects with a limited lifetime that are shared over the network.  </p>
+<h1 id="rfc.section.3.2">
+<a href="#rfc.section.3.2">3.2.</a> <a href="#relative-time" id="relative-time">Relative Time</a>
+</h1>
+<p id="rfc.section.3.2.p.1">Relative time measures the time interval that has elapsed from some well-defined reference point (e.g., 20 minutes from the time of your query).  </p>
+<p id="rfc.section.3.2.p.2">Relative time is commonly used in network protocols, for instance to determine when a packet should be considered dropped or to express Time To Live (TTL) values that govern the length of time for which an object is valid or usable.  </p>
+<p id="rfc.section.3.2.p.3">Since relative time does not express a point in time, it does not rely on synchronized clocks between systems but only on a shared clock rate.  </p>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#keeping-time-different-clocks" id="keeping-time-different-clocks">Keeping Time: Different Clocks</a>
+</h1>
+<p id="rfc.section.4.p.1">In this section, we will have a look at the different clocks a system uses and how it maintains these clocks </p>
+<h1 id="rfc.section.4.1">
+<a href="#rfc.section.4.1">4.1.</a> <a href="#native-clock" id="native-clock">Native Clock</a>
+</h1>
+<p id="rfc.section.4.1.p.1">Each system has its own perception of time.  It gains access it via its native clock.  Typcially, this clock counts cycles of an oscillator but some systems use process CPU times or thread CPU timers (via timers provided by the CPU).  The quality of the native clock therefore dependends on either the stability of the oscillator or the CPU timer.  </p>
+<p id="rfc.section.4.1.p.2">The timescale of the native clock is a purely subjective -- no general meaning can be attached to any specific clock value.  One can only obtain relative time by comparing two values.  Because the value of the native clock always grows at a steady pace, never decreases, never make unexpected jumps, and never skips, the difference between two clock values provides the time intervall between the two measurements.  </p>
+<p id="rfc.section.4.1.p.3">The independence of the native clock from any external time sources renders it resistant to any manipulation but in return there is no guarantee that its clock rate is similar to that of any other system.  This difference in rate, especially when compared to a reference clock, is called clock drift.  </p>
+<p id="rfc.section.4.1.p.4">Clock drift depends on the quality of the clock itself but also on factors such as system load or ambient temperatur which makes it hard to predict.  </p>
+<h1 id="rfc.section.4.2">
+<a href="#rfc.section.4.2">4.2.</a> <a href="#world-clock" id="world-clock">World Clock</a>
+</h1>
+<p id="rfc.section.4.2.p.1">The native clock only provides means to measure relative time.  In order to be able to also process absolute time, it needs to be synchronized with a global reference clock.  Since this clock strives to be the same on all systems, we call it the world clock.  </p>
+<p id="rfc.section.4.2.p.2">There are a number of ways to maintain the world clock based on the system's native clock.  </p>
+<p></p>
+
+<ul>
+<li>The first is to manually maintain an offset between values of the native clock and the reference world clock.  Because of the clock drift of the native clock, this offset needs to be updated from time to time if a minimal divergence from the reference clock is to be maintained.</li>
+<li>Secondly, a hardware clock provided by the system and set to be equivalent to the reference time can be used, allowing the system to retain the offset across reboots.</li>
+<li>Finally, the reference clock can be obtained from an external time source.  Typically, the Internet is used through a variety of timing protocols including the Network Time Protocol2 (NTP), Chrony, SNTP, OpenNTP and others.</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.4.2.p.4">Each of these approaches has own problems attached to it.  </p>
+<p></p>
+
+<ul>
+<li>Manual configurations can be subject to errors and misconfiguration.  Also, for mobile devices, when moving between time zones, the offset must be corrected manually.</li>
+<li>Accessing the hardware clock requires an I/O operation which is resource intensive, therefore many systems use the hardware clock only upon reboot, to initialize the clock offset; subsequent updates are made either manually or through timing protocols.  Further, on many systems the quality of the hardware clock isn't very high, leading to a large clock drift if solely relying on it.  Worse, systems like microcontrollers that operate within embedded systems (e.g., Raspberry Pi, Arduino, etc.) often lack hardware clocks altogether.  These systems rely on external time sources upon reboot and have no means to process absolute time until synchronization with these sources has completed.</li>
+<li>Relying on Internet timing protocols opens up the system time to attack.  Recent papers show vulnerabilities in NTP <a href="#ANTP" class="xref">[ANTP]</a><a href="#ANABM" class="xref">[ANABM]</a><a href="#SECNTP" class="xref">[SECNTP]</a> and SNTP <a href="#BPHSTS" class="xref">[BPHSTS]</a> that allow attackers to maliciously alter system's world clock -- pushing it into the past or even into the future.  Moreover, many of these time-shifting attacks can be performed by off-path attackers, who do not occupy a privileged position on the network between the victim system and its time sources on the Internet.  Researchers have also demonstrated off-path denial of service attacks on timing protocols that prevent systems from synchronizing their clocks.</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.4.2.p.6">In other words, the process of obtaining the offset necessary to provide a world clock creates dependencies that can be exploited.  </p>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> <a href="#implementation-approaches" id="implementation-approaches">Implementation Approaches</a>
+</h1>
+<p id="rfc.section.5.p.1">Because absolute time relies on a shared interpretation of a value expressing time, the world clock is necessary when processing such values.  </p>
+<p id="rfc.section.5.p.2">For relative time, however, where only the rate of passage of time needs to be close enough to that of the other systems involved, there is no need to rely on the world clock when determining whether an interval has passed.  </p>
+<p id="rfc.section.5.p.3">Instead, by obtaining a value from the native clock when the interval has started only the native clock is necessary to determine when this interval ends. As the native clock does not rely on any external time sources, the implementation becomes resistant to the difficulties of coordinating with these sources.  </p>
+<p id="rfc.section.5.p.4">However, using the native clock in this way comes with a caveat. Since the native clock is not subject to any adjustments by timing protocols, it is not adjusted for the error introduced by clock drift. While this is likely of little consequence for short intervals, it may become significant for intervals that span long periods of time.  </p>
+<p id="rfc.section.5.p.5">The choice of clock to be used is situation-specific. If a certain amount of clock drift can be tolerated or if time intervals are short, implementors may prefer to use the native clock. However, if precise timing over long periods is required, then the implementors have no choice but to fall back to world clock </p>
+<h1 id="rfc.section.6">
+<a href="#rfc.section.6">6.</a> <a href="#accessing-the-native-clock-on-selected-operating-systems" id="accessing-the-native-clock-on-selected-operating-systems">Accessing the Native Clock on Selected Operating Systems</a>
+</h1>
+<p id="rfc.section.6.p.1">In most operating systems, the standard functions to access time use the world clock since that is normally what users would expect. This section provides an overview how the native clock can be accesses on some common operating systems.  </p>
+<h1 id="rfc.section.6.1">
+<a href="#rfc.section.6.1">6.1.</a> <a href="#posix" id="posix">POSIX</a>
+</h1>
+<p id="rfc.section.6.1.p.1">POSIX defines a system C API function which may provide native time: <samp>clock_gettime()</samp>, when used with a <samp>clock_id</samp> of <samp>CLOCK_MONOTONIC</samp>.  </p>
+<p id="rfc.section.6.1.p.2">Note that on some systems <samp>CLOCK_MONOTONIC</samp> is still influenced by an external time source (for syntonizing the clock rate) and <samp>CLOCK_MONITONIC_RAW</samp> needs to be used for clock values not influenced by an external time source and not susceptible for time-shifting attacks.  </p>
+<h1 id="rfc.section.6.2">
+<a href="#rfc.section.6.2">6.2.</a> <a href="#microsoft-window" id="microsoft-window">Microsoft Window</a>
+</h1>
+<p id="rfc.section.6.2.p.1">In the Microsoft Windows operating system, native time is called 'Windows Time' and can be accessed through the <samp>GetTickCount</samp> and <samp>GetTickCount64</samp> API functions.  The returned value is nomially the number of milliseconds since system start.  <samp>GetTickCount</samp> will return a 32 bit value while <samp>GetTickCount64</samp> returns a value 64 bits wide that will wrap around less </p>
+<h1 id="rfc.section.7">
+<a href="#rfc.section.7">7.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
+</h1>
+<p id="rfc.section.7.p.1">This memo includes no request to IANA.  </p>
+<h1 id="rfc.section.8">
+<a href="#rfc.section.8">8.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
+</h1>
+<p id="rfc.section.8.p.1">Time is a fundamental component for the security guarantees claimed by various applications.  A system that uses a time distribution protocol may be affected by the security aspects of the time protocol.  The security considerations of time protocols in general are discussed in <a href="#RFC7384" class="xref">[RFC7384]</a>.  This document discusses the security considerations with respect to implementing time values in applications in various sections.  </p>
+<h1 id="rfc.references">
+<a href="#rfc.references">9.</a> References</h1>
+<h1 id="rfc.references.1">
+<a href="#rfc.references.1">9.1.</a> Normative References</h1>
+<table><tbody><tr>
+<td class="reference"><b id="RFC7384">[RFC7384]</b></td>
+<td class="top">
+<a>Mizrahi, T.</a>, "<a href="https://tools.ietf.org/html/rfc7384">Security Requirements of Time Protocols in Packet Switched Networks</a>", RFC 7384, DOI 10.17487/RFC7384, October 2014.</td>
+</tr></tbody></table>
+<h1 id="rfc.references.2">
+<a href="#rfc.references.2">9.2.</a> Informative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="ANABM">[ANABM]</b></td>
+<td class="top">
+<a>Malhotra, A.</a> and <a>S. Goldberg</a>, "<a href="https://eprint.iacr.org/2016/055">Attacking NTP's Authenticated Broadcast Mode</a>", 2016.</td>
+</tr>
+<tr>
+<td class="reference"><b id="ANTP">[ANTP]</b></td>
+<td class="top">
+<a>Malhotra, A.</a>, <a>Cohen, I.</a>, <a>Brakke, E.</a> and <a>S. Goldberg</a>, "<a href="https://eprint.iacr.org/2015/1020">Attacking the Network Time Protocol</a>", 2015.</td>
+</tr>
+<tr>
+<td class="reference"><b id="BPHSTS">[BPHSTS]</b></td>
+<td class="top">
+<a>Jose, J.</a>, "<a href="https://www.blackhat.com/docs/eu-14/materials/eu-14-Selvi-Bypassing-HTTP-Strict-Transport-Security-wp.pdf">Bypassing HTTP Strict Transport Security</a>", 2014.</td>
+</tr>
+<tr>
+<td class="reference"><b id="SECNTP">[SECNTP]</b></td>
+<td class="top">
+<a>Malhotra, A.</a>, <a>Gundy, M.</a>, <a>Varia, M.</a>, <a>Kennedy, H.</a>, <a>Gardner, J.</a> and <a>S. Goldberg</a>, "<a href="http://eprint.iacr.org/2016/1006">The Security of NTP's Datagram Protocol</a>", 2016.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.appendix.A">
+<a href="#rfc.appendix.A">Appendix A.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a>
+</h1>
+<p id="rfc.section.A.p.1">We are thankful to Sharon Goldberg and Benno Overreinder for useful discussions. Thanks to Dieter Sibold, Joachim Fabini and Denis Reilly, for value input and suggestions.  </p>
+<h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Aanchal Malhotra</span> 
+	  <span class="n hidden">
+		<span class="family-name">Malhotra</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Boston University</span>
+	<span class="adr">
+	  <span class="vcardline">111 Cummington Mall</span>
+
+	  <span class="vcardline">
+		<span class="locality">Boston</span>,  
+		<span class="region"></span>
+		<span class="code">02215</span>
+	  </span>
+	  <span class="country-name vcardline">USA</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:aanchal4@bu.edu">aanchal4@bu.edu</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Kristof Teichel</span> 
+	  <span class="n hidden">
+		<span class="family-name">Teichel</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Physikalisch-Technische Bundesanstalt</span>
+	<span class="adr">
+	  <span class="vcardline">Bundesallee 100</span>
+
+	  <span class="vcardline">
+		<span class="locality">Braunschweig</span>,  
+		<span class="region"></span>
+		<span class="code">D-38116</span>
+	  </span>
+	  <span class="country-name vcardline">Germany</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:kristof.teichel@ptb.de">kristof.teichel@ptb.de</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Martin Hoffmann</span> 
+	  <span class="n hidden">
+		<span class="family-name">Hoffmann</span>
+	  </span>
+	</span>
+	<span class="org vcardline">NLnet Labs</span>
+	<span class="adr">
+	  <span class="vcardline">Science Park 400</span>
+
+	  <span class="vcardline">
+		<span class="locality">Amsterdam</span>,  
+		<span class="region"></span>
+		<span class="code">1098 XH</span>
+	  </span>
+	  <span class="country-name vcardline">Netherlands</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:martin@nlnetlabs.nl">martin@nlnetlabs.nl</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Willem Toorop</span> 
+	  <span class="n hidden">
+		<span class="family-name">Toorop</span>
+	  </span>
+	</span>
+	<span class="org vcardline">NLnet Labs</span>
+	<span class="adr">
+	  <span class="vcardline">Science Park 400</span>
+
+	  <span class="vcardline">
+		<span class="locality">Amsterdam</span>,  
+		<span class="region"></span>
+		<span class="code">1098 XH</span>
+	  </span>
+	  <span class="country-name vcardline">Netherlands</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:willem@nlnetlabs.nl">willem@nlnetlabs.nl</a></span>
+
+  </address>
+</div>
+
+</body>
+</html>

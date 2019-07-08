@@ -566,7 +566,7 @@
 <p></p>
 
 <ul>
-<li>Manual configurations can be subject to errors and misconfiguration.  Also, for mobile devices, when moving between time zones, the offset must be corrected manually.</li>
+<li>Manual configurations can be subject to errors and misconfiguration.</li>
 <li>Accessing the hardware clock requires an I/O operation which is resource intensive, therefore many systems use the hardware clock only upon reboot, to initialize the clock offset; subsequent updates are made either manually or through timing protocols.  Further, on many systems the quality of the hardware clock isn't very high, leading to a large clock drift if solely relying on it.  Worse, systems like microcontrollers that operate within embedded systems (e.g., Raspberry Pi, Arduino, etc.) often lack hardware clocks altogether.  These systems rely on external time sources upon reboot and have no means to process absolute time until synchronization with these sources has completed.</li>
 <li>Relying on Internet timing protocols opens up the system time to attack.  Recent papers show vulnerabilities in NTP <a href="#ANTP" class="xref">[ANTP]</a><a href="#ANABM" class="xref">[ANABM]</a><a href="#SECNTP" class="xref">[SECNTP]</a> and SNTP <a href="#BPHSTS" class="xref">[BPHSTS]</a> that allow attackers to maliciously alter system's world clock -- pushing it into the past or even into the future.  Moreover, many of these time-shifting attacks can be performed by off-path attackers, who do not occupy a privileged position on the network between the victim system and its time sources on the Internet.  Researchers have also demonstrated off-path denial of service attacks on timing protocols that prevent systems from synchronizing their clocks.</li>
 </ul>
@@ -589,7 +589,7 @@
 <a href="#rfc.section.6.1">6.1.</a> <a href="#posix" id="posix">POSIX</a>
 </h1>
 <p id="rfc.section.6.1.p.1">POSIX defines a system C API function which may provide native time: <samp>clock_gettime()</samp>, when used with a <samp>clock_id</samp> of <samp>CLOCK_MONOTONIC</samp>.  </p>
-<p id="rfc.section.6.1.p.2">Note that on some systems <samp>CLOCK_MONOTONIC</samp> is still influenced by an external time source (for syntonizing the clock rate) and <samp>CLOCK_MONITONIC_RAW</samp> needs to be used for clock values not influenced by an external time source and not susceptible for time-shifting attacks.  </p>
+<p id="rfc.section.6.1.p.2">Note that on some systems <samp>CLOCK_MONOTONIC</samp> is still influenced by an external time source (for syntonizing the clock rate) and the non-standard <samp>CLOCK_MONITONIC_RAW</samp> needs to be used for clock values not influenced by an external time source and not susceptible for time-shifting attacks.  </p>
 <h1 id="rfc.section.6.2">
 <a href="#rfc.section.6.2">6.2.</a> <a href="#microsoft-window" id="microsoft-window">Microsoft Window</a>
 </h1>

@@ -261,8 +261,7 @@ Internet-Draft            implementation-advice                July 2019
    Each of these approaches has own problems attached to it.
 
    o  Manual configurations can be subject to errors and
-      misconfiguration.  Also, for mobile devices, when moving between
-      time zones, the offset must be corrected manually.
+      misconfiguration.
 
    o  Accessing the hardware clock requires an I/O operation which is
       resource intensive, therefore many systems use the hardware clock
@@ -273,7 +272,8 @@ Internet-Draft            implementation-advice                July 2019
       Worse, systems like microcontrollers that operate within embedded
       systems (e.g., Raspberry Pi, Arduino, etc.) often lack hardware
       clocks altogether.  These systems rely on external time sources
-
+      upon reboot and have no means to process absolute time until
+      synchronization with these sources has completed.
 
 
 
@@ -281,9 +281,6 @@ Malhotra, et al.         Expires January 9, 2020                [Page 5]
 
 Internet-Draft            implementation-advice                July 2019
 
-
-      upon reboot and have no means to process absolute time until
-      synchronization with these sources has completed.
 
    o  Relying on Internet timing protocols opens up the system time to
       attack.  Recent papers show vulnerabilities in NTP
@@ -333,6 +330,9 @@ Internet-Draft            implementation-advice                July 2019
 
 
 
+
+
+
 Malhotra, et al.         Expires January 9, 2020                [Page 6]
 
 Internet-Draft            implementation-advice                July 2019
@@ -351,8 +351,8 @@ Internet-Draft            implementation-advice                July 2019
    "clock_gettime()", when used with a "clock_id" of "CLOCK_MONOTONIC".
 
    Note that on some systems "CLOCK_MONOTONIC" is still influenced by an
-   external time source (for syntonizing the clock rate) and
-   "CLOCK_MONITONIC_RAW" needs to be used for clock values not
+   external time source (for syntonizing the clock rate) and the non-
+   standard "CLOCK_MONITONIC_RAW" needs to be used for clock values not
    influenced by an external time source and not susceptible for time-
    shifting attacks.
 

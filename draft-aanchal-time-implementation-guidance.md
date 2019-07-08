@@ -215,8 +215,6 @@ native clock.
 Each of these approaches has own problems attached to it.
 
   * Manual configurations can be subject to errors and misconfiguration.
-    Also, for mobile devices, when moving between time zones, the offset
-    must be corrected manually.
 
   * Accessing the hardware clock requires an I/O operation which is
     resource intensive, therefore many systems use the hardware clock
@@ -283,9 +281,9 @@ POSIX defines a system C API function which may provide native time:
 `clock_gettime()`, when used with a `clock_id` of `CLOCK_MONOTONIC`.
 
 Note that on some systems `CLOCK_MONOTONIC` is still influenced by an external
-time source (for syntonizing the clock rate) and `CLOCK_MONITONIC_RAW` needs to
-be used for clock values not influenced by an external time source and not
-susceptible for time-shifting attacks.
+time source (for syntonizing the clock rate) and the non-standard
+`CLOCK_MONITONIC_RAW` needs to be used for clock values not influenced by an
+external time source and not susceptible for time-shifting attacks.
 
 ## Microsoft Window
 

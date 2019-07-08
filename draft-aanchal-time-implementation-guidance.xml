@@ -237,9 +237,7 @@ others.</t>
 </t>
 <t>
 <list style="symbols">
-<t>Manual configurations can be subject to errors and misconfiguration.
-Also, for mobile devices, when moving between time zones, the offset
-must be corrected manually.</t>
+<t>Manual configurations can be subject to errors and misconfiguration.</t>
 <t>Accessing the hardware clock requires an I/O operation which is
 resource intensive, therefore many systems use the hardware clock
 only upon reboot, to initialize the clock offset; subsequent updates
@@ -307,9 +305,9 @@ overview how the native clock can be accesses on some common operating systems.
 <spanx style="verb">clock_gettime()</spanx>, when used with a <spanx style="verb">clock_id</spanx> of <spanx style="verb">CLOCK_MONOTONIC</spanx>.
 </t>
 <t>Note that on some systems <spanx style="verb">CLOCK_MONOTONIC</spanx> is still influenced by an external
-time source (for syntonizing the clock rate) and <spanx style="verb">CLOCK_MONITONIC_RAW</spanx> needs to
-be used for clock values not influenced by an external time source and not
-susceptible for time-shifting attacks.
+time source (for syntonizing the clock rate) and the non-standard
+<spanx style="verb">CLOCK_MONITONIC_RAW</spanx> needs to be used for clock values not influenced by an
+external time source and not susceptible for time-shifting attacks.
 </t>
 </section>
 

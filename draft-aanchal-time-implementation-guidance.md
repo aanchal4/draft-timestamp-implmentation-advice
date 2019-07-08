@@ -353,5 +353,6 @@ in applications in various sections.
 
 # Acknowledgements
 We are thankful to Sharon Goldberg and Benno Overreinder for useful
-discussions. Thanks to Dieter Sibold, for value input.
+discussions. Thanks to Dieter Sibold, Joachim Fabini and Denis Reilly,
+for value input and suggestions.
 

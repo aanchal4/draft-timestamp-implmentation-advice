@@ -158,15 +158,9 @@ when a packet should be considered dropped or to express Time To Live (TTL)
 values that govern the length of time for which an object is valid or usable. 
 
 Since relative time does not express a point in time, it does not rely on
-synchronized clocks between systems but only on a shared rate of passage of his
-time.
+synchronized clocks between systems but only on a shared clock rate.
 
 # Keeping Time: Different Clocks
-
-Because time is relative to an observer, there cannot be a universally agreed
-upon time.  At best we can achieve an approximation by constantly updating our
-own clocks against a shared reference clock.  Remaining close to this reference
-clock is a complex process with its own set of difficulties.
 
 In this section, we will have a look at the different clocks a system uses and
 how it maintains these clocks
@@ -272,11 +266,10 @@ adjusted for the error introduced by clock drift. While this is likely of
 little consequence for short intervals, it may become significant for intervals
 that span long periods of time.
 
-Consequently, the choice of clock to be used is application-specific.  If
-applications can tolerate a certain amount of clock drift or if the time
-intervals are short, implementers may prefer using the native clock. If the
-application relies on precise timing over long periods one has no choice but to
-fall back to the world clock.
+The choice of clock to be used is situation-specific. If a certain amount of
+clock drift can be tolerated or if time intervals are short, implementors may
+prefer to use the native clock. However, if precise timing over long periods is
+required, then the implementors have no choice but to fall back to world clock
 
 # Accessing the Native Clock on Selected Operating Systems
 
@@ -287,12 +280,12 @@ overview how the native clock can be accesses on some common operating systems.
 ## POSIX
 
 POSIX defines a system C API function which may provide native time:
-`clock_gettime()`, when used with a `clock_id` of `CLOCK_MONOTONIC` (when
-supported by the system).  POSIX does not make a distinction between raw time
-and adjusted raw time in the definition of this function.  Beware that, with
-some systems, `CLOCK_MONOTONIC` deliveres adjusted raw time and that
-`CLOCK_MONOTONIC_RAW` needs to be used as `clock_id` to get unadjusted raw
-time.  Non-POSIX systems may provide different APIs
+`clock_gettime()`, when used with a `clock_id` of `CLOCK_MONOTONIC`.
+
+Note that on some systems `CLOCK_MONOTONIC` is still influenced by an external
+time source (for syntonizing the clock rate) and `CLOCK_MONITONIC_RAW` needs to
+be used for clock values not influenced by an external time source and not
+susceptible for time-shifting attacks.
 
 ## Microsoft Window
 
@@ -360,5 +353,5 @@ in applications in various sections.
 
 # Acknowledgements
 We are thankful to Sharon Goldberg and Benno Overreinder for useful
-discussions.
+discussions. Thanks to Dieter Sibold, for value input.
 

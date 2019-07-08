@@ -17,7 +17,7 @@ RFC7384 SYSTEM
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 
-<rfc category="info" docName="draft-aanchal-time-implementation-guidance-00" ipr="trust200902">
+<rfc category="info" docName="draft-aanchal-time-implementation-guidance-02" ipr="trust200902">
   <front>
     <title>On Implementing Time</title>
 
@@ -77,7 +77,7 @@ RFC7384 SYSTEM
         </address>
     </author>
 
-    <date year="2017" month="October" day="30"/>
+    <date year="2017" month="July" day="8"/>
 
     <area>General</area>
 

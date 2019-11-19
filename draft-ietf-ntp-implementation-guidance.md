@@ -6,13 +6,13 @@ category = "info"
 ipr = "trust200902"
 area = "General"
 workgroup = "NTP Working Group"
-date = 2019-07-08T11:00:00Z
+date = 2019-11-19T00:00:00Z
 
 [seriesInfo]
 name = "Internet-Draft"
 value = "@DOCNAME@"
 stream = "IETF"
-status = "standard"
+status = "informational"
 
 [[author]]
 initials = "A."

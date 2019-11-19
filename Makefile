@@ -1,5 +1,5 @@
-VERSION = 02
-DOCNAME = draft-aanchal-time-implementation-guidance
+VERSION = 00
+DOCNAME = draft-ietf-ntp-implementation-guidance
 TARGETS = $(DOCNAME)-$(VERSION).txt $(DOCNAME)-$(VERSION).html
 MMARK = mmark # Version 1.3.6
 MMARK_OPTIONS = --xml2 --page
